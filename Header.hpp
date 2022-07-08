@@ -17,6 +17,7 @@
 #include "FdtdCalc.hpp"
 #include "Materials.hpp"
 #include <ctime>
+#include "FdtdAlloc.hpp"
 
 #include "ui_mainwindow.h"
 #include "mainwindow.hpp"

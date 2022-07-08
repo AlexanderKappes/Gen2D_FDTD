@@ -20,28 +20,9 @@ public:
     double To;//Исходное значение времени
     double dT;
 
-    double ***HX;
-    double ***HY;
-    double ***HZ;
+    void updateH2d(grid_fdtd *g);
+    void updateE2d(grid_fdtd *g);
 
-    double ***EX;
-    double ***EY;
-    double ***EZ;
-
-
-
-
-    void TimeStepForH (int      XSize,  int      YSize, int     ZSize,
-                       double   TX,     double   TY,    double  TZ,
-                       double   ***HX,  double   ***HY, double  ***HZ,
-                       double   ***EX,  double   ***EY, double  ***EZ,
-                       double   ***AH);
-
-    void TimeStepForE (int      XSize,  int      YSize, int     ZSize,
-                       double   TX,     double   TY,    double  TZ,
-                       double   ***HX,  double   ***HY, double  ***HZ,
-                       double   ***EX,  double   ***EY, double  ***EZ,
-                       double   ***BE,  double   ***AE);
 
 };
 

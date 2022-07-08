@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    BoundCond.cpp \
     FdtdCalc.cpp \
     ImageField.cpp \
     ImageWork.cpp \
@@ -23,6 +24,7 @@ SOURCES += \
     qPlot/qcustomplot.cpp
 
 HEADERS += \
+    BoundCond.hpp \
     Constant.hpp    \
     FdtdAlloc.hpp \
     FdtdCalc.hpp \
