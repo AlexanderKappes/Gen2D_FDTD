@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     arg_beg = 0.0 * M_PI/180;
 
-    //FI.addSnapshot(ui->CP_EM_Field, 100);
+    FI.addSnapshot(ui->CP_EM_Field, 100);
     GenGeom.init_rotor   ();
     GenGeom.init_stator  ();
     GenGrid.Gen_Grid_Vector_init(&GenGeom);

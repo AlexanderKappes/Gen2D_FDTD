@@ -281,58 +281,6 @@ void ImageWork::add_Curve(Ui::MainWindow *ui, GenGraph2D *GenGraph, GenGeom2D *G
 }
 
 /*
-void ImageWork::ColorPlace(Ui::MainWindow *ui, GenGraph2D *GenGraph)
-{
-    // set up the QCPColorMap:
-    GenGraph->colorMap = new QCPColorMap(ui->customPlot1->xAxis, ui->customPlot1->yAxis);
-    int nx = 200;
-    int ny = 200;
-    GenGraph->colorMap->data()->setSize(nx, ny); // we want the color map to have nx * ny data points
-
-    double gen_vis_field_radius = 1.1*ui->SB_stator_d->value()/2;
-    QCPRange gen_vis_field(-gen_vis_field_radius,gen_vis_field_radius);
-    GenGraph->colorMap->data()->setRange(gen_vis_field, gen_vis_field);
-
-    GenGraph->colorMap->setName("Color map");
-    // now we assign some data, by accessing the QCPColorMapData instance of the color map:
-    double x, y, z;
-    for (int xIndex=0; xIndex<nx; ++xIndex)
-    {
-    for (int yIndex=0; yIndex<ny; ++yIndex)
-    {
-      GenGraph->colorMap->data()->cellToCoord(xIndex, yIndex, &x, &y);
-      double r = 3*qSqrt(x*x+y*y)+1e-2;
-      z = 2*x*(qCos(r+2)/r-qSin(r+2)/r); // the B field strength of dipole radiation (modulo physical constants)
-      GenGraph->colorMap->data()->setCell(xIndex, yIndex, z);
-
-      double val_alpha = 125;//0...255 0 full transperent
-      GenGraph->colorMap->data()->setAlpha(xIndex, yIndex, val_alpha);
-    }
-    }
-    // add a color scale:
-    QCPColorScale *colorScale = new QCPColorScale(ui->customPlot1);
-    ui->customPlot1->plotLayout()->addElement(1, 1,colorScale); // add it to the right of the main axis rect
-    colorScale->setType(QCPAxis::atRight); // scale shall be vertical bar with tick/axis labels right (actually atRight is already the default)
-    GenGraph->colorMap->setColorScale(colorScale); // associate the color map with the color scale
-    colorScale->axis()->setLabel("Magnetic Field Strength");
-    // set the color gradient of the color map to one of the presets:
-    GenGraph->colorMap->setGradient(QCPColorGradient::gpJet);
-    // we could have also created a QCPColorGradient instance and added own colors to
-    // the gradient, see the documentation of QCPColorGradient for what's possible.
-    // rescale the data dimension (color) such that all data points lie in the span visualized by the color gradient:
-    GenGraph->colorMap->rescaleDataRange();
-
-    // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
-    QCPMarginGroup *marginGroup = new QCPMarginGroup(ui->customPlot1);
-    ui->customPlot1->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
-    colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
-    // rescale the key (x) and value (y) axes so the whole color map is visible:
-    ui->customPlot1->rescaleAxes();
-          //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ui->customPlot1->replot();
-}
-*/
-/*
 void ImageWork::ChangeFunc(Ui::MainWindow *ui, CurrentSource *CurS)
 {
 
