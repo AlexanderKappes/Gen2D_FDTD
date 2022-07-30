@@ -2,14 +2,16 @@
 #define BOUNDCOND_HPP
 #include "Header.hpp"
 
-static int      initDone = 0;
-static double   coef0, coef1, coef2;
-static double   *ezBottom;
-
 class BoundCond
 {
 public:
     BoundCond();
+    int      initDone = 0;
+    double   coef0, coef1, coef2;
+    double   *ezBottom;
+    void abcInit(grid_fdtd *g);
+    void abc(grid_fdtd *g);
+    ~BoundCond();
 
 };
 

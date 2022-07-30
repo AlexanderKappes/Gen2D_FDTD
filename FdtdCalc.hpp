@@ -5,7 +5,7 @@
 class Fdtd_calc
 {
 public:
-    Fdtd_calc(int in_XSize, int in_YSize, int in_ZSize, double in_TX, double in_TY, double in_TZ, int    in_NT, double in_To, double in_dT);
+    Fdtd_calc(grid_fdtd *g, int in_XSize, int in_YSize, int in_ZSize, double in_TX, double in_TY, double in_TZ, int   in_NT, double in_To, double in_dT);
 
     //Размер счетного пространства
     int XSize;

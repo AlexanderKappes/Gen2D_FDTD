@@ -467,8 +467,6 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
                 stat_dx[j + i*M] = sqrt (x_dx * x_dx + y_dx * y_dx);
             }
     }
-
-    int check1 = 1;
 }
 
 GenGrid2D::~GenGrid2D()

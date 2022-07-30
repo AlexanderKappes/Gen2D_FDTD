@@ -4,7 +4,7 @@
 
 struct material_par
     {
-        double nu;
+        double mu;
         double sigma;
         double epsilon;
     };
@@ -12,33 +12,26 @@ struct material_par
 class Materials
 {
 public:
-    Materials(int in_XSize_rot, int in_YSize_rot, int in_XSize_stat, int in_YSize_stat);
-    void Materials_array(double dT, GenGrid2D *Gr);
+    Materials();
+    void Materials_array(GenGrid2D *Gr, bool part);
+    void gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part);
     //Размер счетного пространства
     int XSize_rot;
     int YSize_rot;
     int XSize_stat;
     int YSize_stat;
+    QVector<material_par> rot_mat;
+    QVector<material_par> stat_mat;
 
-    material_par **mat_par;
-    //массивы предварительно вычисленных коэффициентов
-    double **AE_rot;//C1
-    double **BE_rot;//C2
-    double **AH_rot;//C
+    material_par rot_wedge;//Дюралюминий: rot - 1, mu = 1, sigma = 0, epsilon = 1
+    material_par rot_arm;//Медь: rot - 2, mu = 1, sigma = 0, epsilon = 1
+    material_par rot_steel;//Сталь 1030: rot - 3, mu = 477.6, sigma = 0, epsilon = 1
 
-    double **AE_stat;//C1
-    double **BE_stat;//C2
-    double **AH_stat;//C
-
-    material_par rot_wedge;//rot - 1
-    material_par rot_arm;//rot - 2
-    material_par rot_steel;//rot - 3
-
-    material_par stat_air;//stat - 1
-    material_par stat_wedge;//stat - 2
-    material_par stat_arm;//stat - 3
-    material_par stat_steel_across;//stat - 4
-    material_par stat_steel_along;//stat - 5
+    material_par stat_air;//Воздух: stat - 1, mu = 1, sigma = 0, epsilon = 1
+    material_par stat_wedge;//???: stat - 2, mu = 1, sigma = 0, epsilon = 1
+    material_par stat_arm;//Медь: stat - 3, mu = 1, sigma = 0, epsilon = 1
+    material_par stat_steel_across;//Сталь 3413 поперек (лин. участок): stat - 4, mu = 3959, sigma = 0, epsilon = 1
+    material_par stat_steel_along;//Сталь 3413 вдоль (лин. участок): stat - 5, mu = 4918, sigma = 0, epsilon = 1
 };
 
 #endif // MATERIALS_HPP

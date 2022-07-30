@@ -1,7 +1,6 @@
 ﻿#include "Header.hpp"
-#include "FdtdAlloc.hpp"
 
-Fdtd_calc::Fdtd_calc(int in_XSize, int in_YSize, int in_ZSize, double in_TX, double in_TY, double in_TZ, int    in_NT, double in_To, double in_dT)
+Fdtd_calc::Fdtd_calc(grid_fdtd *g, int in_XSize, int in_YSize, int in_ZSize, double in_TX, double in_TY, double in_TZ, int   in_NT, double in_To, double in_dT)
 {
     //Размер счетного пространства
     XSize = in_XSize;
@@ -16,15 +15,20 @@ Fdtd_calc::Fdtd_calc(int in_XSize, int in_YSize, int in_ZSize, double in_TX, dou
     To = in_To;//Исходное значение времени
     dT = in_dT;
 
+    g->type = tmZGrid;
+    g->cdtds = 1.0 / sqrt(2.0); // Courant number
+    double imp0 = 377.0;
+
 }
 
-/* update magnetic field */
+
 void Fdtd_calc::updateH2d(grid_fdtd *g) {
+    /*
 int mm, nn;
 
 double Ez_next_y, Ez_next_x, Ez;
 double Chxh, Chxe, Chyh, Chye;
-double Hy, Hy_pr, Hx, Hx_pr;
+double Hy, Hx;
 
 if (g->type == oneDGrid)
     {
@@ -61,17 +65,17 @@ else {
                 g->hy   [(mm) * g->sizeY + (nn)] = Chyh * Hy + Chye * (Ez_next_y - Ez);
             }
      }
-
-    int check = 0;
+*/
     return;
 }
 
 /* update electric field */
 void Fdtd_calc::updateE2d(grid_fdtd *g) {
+    /*
 int mm, nn;
 //double EZcheck;
 
-double Ez, Ceze, Cezh;
+double Ez, Ceze, Cezhx, Cezhy;
 double Hy, Hy_pr, Hx, Hx_pr;
 
 if (g->type == oneDGrid)
@@ -80,10 +84,11 @@ if (g->type == oneDGrid)
         {
             Ez          = g->ez[mm];
             Ceze        = g->ceze[mm];
-            Cezh        = g->cezh[mm];
+            Cezhx        = g->cezhx[mm];
+            Cezhy        = g->cezhy[mm];
             Hy          = g->hy[mm];
             Hy_pr       = g->hy[mm-1];
-            g->ez[mm]   = Ceze * Ez + Cezh * (Hy - Hy_pr);
+            g->ez[mm]   = Ceze * Ez + Cezhx * (Hy - Hy_pr);
         }
     }
 else
@@ -93,16 +98,16 @@ else
             {
                 Ez      = g->ez [(mm) * g->sizeY + (nn)];
                 Ceze    = g->ceze [(mm) * g->sizeY + (nn)];
-                Cezh    = g->cezh [(mm) * g->sizeY + (nn)];
+                Cezhx    = g->cezhx [(mm) * g->sizeY + (nn)];
+                Cezhy    = g->cezhy [(mm) * g->sizeY + (nn)];
                 Hy      = g->hy [(mm) * g->sizeY + (nn)];
                 Hy_pr   = g->hy [(mm - 1) * g->sizeY + (nn)];
                 Hx      = g->hx [(mm) * g->sizeY + (nn)];
                 Hx_pr   = g->hx [(mm) * g->sizeY + (nn - 1)];
-                g->ez [(mm) * g->sizeY + (nn)] = Ceze * Ez + Cezh * (( Hy - Hy_pr) - ( Hx - Hx_pr));
+                g->ez [(mm) * g->sizeY + (nn)] = Ceze * Ez + Cezhx * (( Hy - Hy_pr) - ( Hx - Hx_pr));
             }
     }
-
-int check = 0;
+*/
 return;
 }
 

@@ -1,14 +1,11 @@
 ﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-
 #include "ImageWork.hpp"
 #include "ImageField.hpp"
 #include "Header.hpp"
 
 namespace Ui { class MainWindow; }
-
-
 
 class MainWindow : public QMainWindow
 {
@@ -29,19 +26,26 @@ public:
     const double TX_o = 1.0;    const double TY_o = 1.0;    const double TZ_o = 1.0;
     const int Xsize_o = 10;      const int Ysize_o = 10;      const int Zsize_o = 10;
 
+    double dT_em = 0.00000001;
+
     //double c = c_light;
     //double eo = epsilon_o;
     //double no = nu_o;
     //material_air ();
 
     GenGeom2D   GenGeom;
-    GridShow2D  GridShow;
     GenGrid2D   GenGrid;
     GenGraph2D  GenGraph;
     ImageWork   IW;
     ImageField  FI;
+    grid_fdtd g_r;
+    grid_fdtd g_s;
+    BoundCond BC;
     CurrentSource CurS = CurrentSource(Nsh_o, dT_o, Imax_sin_o, f_o, psi_o);
-    Fdtd_calc   FDTD = Fdtd_calc (Xsize_o, Ysize_o, Zsize_o, TX_o, TY_o, TZ_o, Nsh_o, T_o, dT_o);
+    Materials Mat;
+    Fdtd_calc   FDTD_R = Fdtd_calc(&g_r, Xsize_o, Ysize_o, Zsize_o, TX_o, TY_o, TZ_o, Nsh_o, T_o, dT_o);
+    Fdtd_calc   FDTD_S = Fdtd_calc(&g_s, Xsize_o, Ysize_o, Zsize_o, TX_o, TY_o, TZ_o, Nsh_o, T_o, dT_o);
+
     double      arg_beg;
     QVector <double> sign_i_x, sign_i_y;
 
@@ -58,11 +62,11 @@ private slots:
     void moveLegend();
     void on_pushButton_clicked();
 
-    void on_Set_rotor_color_clicked(bool checked);
+    void on_Set_rotor_color_clicked();
 
-    void on_Set_air_gap_color_clicked(bool checked);
+    void on_Set_air_gap_color_clicked();
 
-    void on_Set_stator_color_clicked(bool checked);
+    void on_Set_stator_color_clicked();
 
     void on_show_A_coil_checkBox_toggled(bool checked);
 
@@ -78,7 +82,7 @@ private slots:
 
     void on_show_field_coil_checkBox_toggled(bool checked);
 
-    void on_PB_source_new_clicked(bool checked);
+    void on_PB_source_new_clicked();
 
     void ChangeFunc();
 

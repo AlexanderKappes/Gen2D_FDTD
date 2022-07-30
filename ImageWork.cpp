@@ -4,7 +4,7 @@ ImageWork::ImageWork()
 {
 
 }
-void ImageWork::add_Point(Ui::MainWindow *ui, GenGraph2D *GenGraph, GenGrid2D *GenGrid, QCustomPlot *CP)
+void ImageWork::add_Point(GenGraph2D *GenGraph, GenGrid2D *GenGrid, QCustomPlot *CP)
 {
     GenGraph->stator_grid_curve_Ez      = new QCPCurve(CP->xAxis, CP->yAxis);
     GenGraph->stator_grid_curve_Hx      = new QCPCurve(CP->xAxis, CP->yAxis);
