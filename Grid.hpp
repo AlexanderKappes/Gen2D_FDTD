@@ -50,16 +50,14 @@ struct grid_parameters
 enum GRIDTYPE {oneDGrid, teZGrid, tmZGrid, threeDGrid};
 
 struct grid_fdtd {
-    double *hx, *chxh, *chxe;
-    double *hy, *chyh, *chye;
-    double *hz, *chzh, *chze;
-    double *ex, *cexe, *cexh;
-    double *ey, *ceye, *ceyh;
-    double *ez, *ceze, *cezh;
-    int sizeX, sizeY, sizeZ;
-    int time, maxTime;
-    int type;
-    double cdtds;
+    double *hx, *hy, *ez;
+
+    double *chxh, *chxe;
+    double *chyh, *chye;
+    double *ceze, *cezhx, *cezhy;
+
+    int     type;
+    double  cdtds;
 };
 
 #endif // GRID_HPP

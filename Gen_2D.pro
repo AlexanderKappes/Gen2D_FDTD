@@ -16,7 +16,6 @@ SOURCES += \
     GenGeom2D.cpp \
     GenGraph2D.cpp \
     GenGrid2D.cpp \
-    GridShow2D.cpp \
     Materials.cpp   \
     CurrentSource.cpp \
     main.cpp \
@@ -35,7 +34,6 @@ HEADERS += \
     GenGeom2D.hpp \
     GenGraph2D.hpp \
     GenGrid2D.hpp \
-    GridShow2D.hpp \
     Materials.hpp \
     CurrentSource.hpp \
     mainwindow.hpp \

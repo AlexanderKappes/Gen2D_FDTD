@@ -8,6 +8,8 @@ CurrentSource::CurrentSource(int Nsh_in, double dT_in, double Imax_sin_in, doubl
 
     Nsh         = Nsh_in;
     dT          = dT_in;
+
+    double ppw = 30.0;
 }
 
 void CurrentSource::CurrentSourceSinSize()
@@ -60,7 +62,6 @@ double ezInc(double time, double location) {
     arg = M_PI * ((cdtds * time - location) / ppw - 1.0);
     arg = arg * arg;
 
-    int check = 0;
 return (1.0 - 2.0 * arg) * exp(-arg);
 }
 

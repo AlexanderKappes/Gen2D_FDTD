@@ -19,6 +19,10 @@ MainWindow::MainWindow(QWidget *parent)
     GenGrid.Gen_Grid_Calc(&GenGeom);
     GenGrid.Gen_Grid_Pos_rot(&GenGeom, arg_beg);
     GenGrid.Gen_Grid_Pos_stat(&GenGeom);
+    Mat.Materials_array(&GenGrid, true);
+    Mat.Materials_array(&GenGrid, false);
+    Mat.gridInit(&g_r, &GenGrid, dT_em, true);
+    Mat.gridInit(&g_s, &GenGrid, dT_em, false);
     //Установить в окошках параметры по умолчанию
     ParGeomSet      ();
     ParGenGridSet   ();
@@ -32,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     GenGraph.GridPoint_stator               (&GenGrid);
     GenGraph.rotor_coil_curve_Create        (&GenGeom,  &GenGrid, arg_beg);
     IW.add_Curve(ui, &GenGraph, &GenGeom, ui->CP_Construct, true, true);
-    IW.add_Point(ui, &GenGraph, &GenGrid, ui->CP_Construct);
+    IW.add_Point(&GenGraph, &GenGrid, ui->CP_Construct);
 
     IW.add_Curve(ui, &GenGraph, &GenGeom, ui->CP_EM_Field, false, false);
 
@@ -300,7 +304,7 @@ void MainWindow::on_pushButton_clicked()
     GenGraph.GridPoint_stator               (&GenGrid);
     GenGraph.rotor_coil_curve_Create        (&GenGeom,  &GenGrid, arg_beg);
     IW.add_Curve(ui, &GenGraph, &GenGeom, ui->CP_Construct, true, true);
-    IW.add_Point(ui, &GenGraph, &GenGrid, ui->CP_Construct);
+    IW.add_Point(&GenGraph, &GenGrid, ui->CP_Construct);
 
 }
 
@@ -463,7 +467,7 @@ void MainWindow::moveLegend()
   }
 }
 
-void MainWindow::on_Set_air_gap_color_clicked(bool checked)
+void MainWindow::on_Set_air_gap_color_clicked()
 {
     QColor color = QColorDialog::getColor(Qt::red, this);
     if (color.isValid())
@@ -480,7 +484,7 @@ void MainWindow::on_Set_air_gap_color_clicked(bool checked)
     }
 }
 
-void MainWindow::on_Set_rotor_color_clicked(bool checked)
+void MainWindow::on_Set_rotor_color_clicked()
 {
     QColor color = QColorDialog::getColor(Qt::green, this);
     if (color.isValid())
@@ -497,7 +501,7 @@ void MainWindow::on_Set_rotor_color_clicked(bool checked)
     }
 }
 
-void MainWindow::on_Set_stator_color_clicked(bool checked)
+void MainWindow::on_Set_stator_color_clicked()
 {
     QColor color = QColorDialog::getColor(Qt::blue, this);
     if (color.isValid())
@@ -567,7 +571,7 @@ void MainWindow::on_show_field_coil_checkBox_toggled(bool checked)
     ui->CP_Construct->replot();
 }
 
-void MainWindow::on_PB_source_new_clicked(bool checked)
+void MainWindow::on_PB_source_new_clicked()
 {
     ParCurSourceGet ();
     CurS.CurrentSourceSinSize();

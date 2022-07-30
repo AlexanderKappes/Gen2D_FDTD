@@ -11,11 +11,11 @@
 #include "GenGeom2D.hpp"
 #include "Grid.hpp"
 #include "GenGrid2D.hpp"
-#include "GridShow2D.hpp"
 #include "GenGraph2D.hpp"
 #include "CurrentSource.hpp"
 #include "FdtdCalc.hpp"
 #include "Materials.hpp"
+#include "BoundCond.hpp"
 #include <ctime>
 #include "FdtdAlloc.hpp"
 
