@@ -186,8 +186,8 @@ void MainWindow::ParGeomSet ()
     ui->SB_rotor_slot_b        ->setValue( GenGeom.rot_par.b_slot);
     ui->SB_rotor_slot_h        ->setValue( GenGeom.rot_par.h_slot);
     //********************************************************************************
-    ui->rotor_slot_angle       ->setText(QString::fromStdString(std::to_string(GenGeom.rot_par.slot_angle*180/3.1415926)));
-    ui->rotor_pin_angle        ->setText(QString::fromStdString(std::to_string(GenGeom.rot_par.pin_angle*180/3.1415926)));
+    ui->rotor_slot_angle       ->setText(QString::fromStdString(std::to_string(GenGeom.rot_par.slot_arg*180/3.1415926)));
+    ui->rotor_pin_angle        ->setText(QString::fromStdString(std::to_string(GenGeom.rot_par.pin_arg*180/3.1415926)));
     //********************************************************************************
 
     ui->SB_air_gap             ->setValue( GenGeom.air_gap);
@@ -203,8 +203,8 @@ void MainWindow::ParGeomSet ()
 
     ui->SB_a0                  ->setValue( arg_beg*180/M_PI);
     //********************************************************************************
-    ui->stator_slot_angle       ->setText(QString::fromStdString(std::to_string(GenGeom.stat_par.slot_angle*180/3.1415926)));
-    ui->stator_pin_angle        ->setText(QString::fromStdString(std::to_string(GenGeom.stat_par.pin_angle *180/3.1415926)));
+    ui->stator_slot_angle       ->setText(QString::fromStdString(std::to_string(GenGeom.stat_par.slot_arg*180/3.1415926)));
+    ui->stator_pin_angle        ->setText(QString::fromStdString(std::to_string(GenGeom.stat_par.pin_arg *180/3.1415926)));
     //********************************************************************************
 }
 

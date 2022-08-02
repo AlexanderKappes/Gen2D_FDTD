@@ -19,7 +19,7 @@ GenGrid2D::GenGrid2D()
 
     rotor_grid_par.M_w   = 4;
     rotor_grid_par.M_a   = 2;
-    rotor_grid_par.M_b   = 32;
+    rotor_grid_par.M_b   = 16;
     rotor_grid_par.M_air = 0;
 
     stator_grid_par.Nmax = 50;
@@ -51,7 +51,7 @@ grid_data set_grid_data(double x_in,    double y_in,    int sector_in, int point
 void GenGrid2D ::Gen_Grid_Vector_init    (GenGeom2D *G)
 {
 
-    rotor_grid_par.num_arm_layer    =G->rot_par.n_layer;
+    rotor_grid_par.num_arm_layer    = G->rot_par.n_layer;
     stator_grid_par.num_arm_layer   = G->stat_par.n_layer;
 
     rotor_grid_par.n_level          = rotor_grid_par.n_level_wedge
@@ -345,6 +345,7 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
                 double y[stator_grid_par.Nmax];
                 double v_abs;
 
+
                 for (int i = 0; i < (stator_grid_par.Np_s + stator_grid_par.Np_p);i++)
                 {
                     if (i == stator_grid_par.Np_s)
@@ -462,6 +463,9 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
                     x_dx = stat_grid_pos[j + i*M].x - stat_grid_pos[j + (i - N + 2)*M].x;
                     y_dx = stat_grid_pos[j + i*M].y - stat_grid_pos[j + (i - N + 2)*M].y;
                 }
+
+                //if ((j+i*M) == 160)
+                //    int check = 0;
 
                 stat_dy[j + i*M] = sqrt (x_dy * x_dy + y_dy * y_dy);
                 stat_dx[j + i*M] = sqrt (x_dx * x_dx + y_dx * y_dx);

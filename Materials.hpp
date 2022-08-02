@@ -15,6 +15,10 @@ public:
     Materials();
     void Materials_array(GenGrid2D *Gr, bool part);
     void gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part);
+
+    void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p ,QVector<material_par> &arr_out);
+    void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p ,double *arr_out);
+    void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p ,QVector<double> &arr_out);
     //Размер счетного пространства
     int XSize_rot;
     int YSize_rot;
