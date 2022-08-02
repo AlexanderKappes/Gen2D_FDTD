@@ -14,8 +14,6 @@ struct rotor_parameters
     double R;         //rotor external radius
     double h_wedge;   //wedge size
     double h_arm;     //armature size
-    double slot_arg;  //slot angle
-    double pin_arg;   //pin  angle
 
     double b_slot;
     double h_slot;
@@ -24,8 +22,8 @@ struct rotor_parameters
     double sum_all_slot_b;
     double pi_D;
     double slot_part;
-    double pin_angle;
-    double slot_angle;
+    double pin_arg;
+    double slot_arg;
     double wedge_pole_num;
 };
 
@@ -56,8 +54,6 @@ struct stator_parameters
     double sum_all_slot_b;
     double pi_D_buttom_slot;
     double slot_part;
-    double pin_angle;
-    double slot_angle;
 
     int n_phase_slot;
     int n_phase_turn;
