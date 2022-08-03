@@ -18,6 +18,7 @@ SOURCES += \
     GenGrid2D.cpp \
     Materials.cpp   \
     CurrentSource.cpp \
+    OutText.cpp \
     main.cpp \
     mainwindow.cpp \
     qPlot/qcustomplot.cpp
@@ -36,6 +37,7 @@ HEADERS += \
     GenGrid2D.hpp \
     Materials.hpp \
     CurrentSource.hpp \
+    OutText.hpp \
     mainwindow.hpp \
     qPlot/qcustomplot.h
 

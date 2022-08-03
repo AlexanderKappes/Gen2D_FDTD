@@ -18,6 +18,7 @@
 #include "BoundCond.hpp"
 #include <ctime>
 #include "FdtdAlloc.hpp"
+#include "OutText.hpp"
 
 #include "ui_mainwindow.h"
 #include "mainwindow.hpp"

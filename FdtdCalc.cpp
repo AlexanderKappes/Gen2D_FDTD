@@ -1,76 +1,72 @@
 ﻿#include "Header.hpp"
 
-Fdtd_calc::Fdtd_calc(grid_fdtd *g, int in_XSize, int in_YSize, int in_ZSize, double in_TX, double in_TY, double in_TZ, int   in_NT, double in_To, double in_dT)
+Fdtd_calc::Fdtd_calc()
 {
-    //Размер счетного пространства
-    XSize = in_XSize;
-    YSize = in_YSize;
-    ZSize = in_ZSize;
-    //Коэффициенты
-    TX = in_TX; //1/dX
-    TY = in_TY; //1/dY
-    TZ = in_TZ; //1/dZ
-
-    NT = in_NT;
-    To = in_To;//Исходное значение времени
-    dT = in_dT;
-
-    g->type = tmZGrid;
-    g->cdtds = 1.0 / sqrt(2.0); // Courant number
-    double imp0 = 377.0;
 
 }
 
 
-void Fdtd_calc::updateH2d(grid_fdtd *g) {
-    /*
-int mm, nn;
+void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
+{
+    int i, j;
 
-double Ez_next_y, Ez_next_x, Ez;
-double Chxh, Chxe, Chyh, Chye;
-double Hy, Hx;
+    double Ez_next_y, Ez_next_x, Ez;
+    double Chxh, Chxe, Chyh, Chye;
+    double Hy, Hx;
+    int M;
+    int N;
 
-if (g->type == oneDGrid)
+    if (part)
     {
-        for (mm = 0; mm < g->sizeX - 1; mm++)
-        {
-            Chyh        = g->chyh[mm];
-            Hy          = g->hy[mm];
-            Chye        = g->chye[mm];
-            Ez_next_x   = g->ez[mm + 1];
-            Ez          = g->ez[mm];
-            g->hy[mm]   = Chyh * Hy + Chye * (Ez_next_x - Ez);
-        }
+        M = GenGr->rotor_grid_par.Row;
+        N = GenGr->rotor_grid_par.Col;
     }
-else {
-        for (mm = 0; mm < g->sizeX; mm++)
-            for (nn = 0; nn < g->sizeY - 1; nn++)
+    else
+    {
+        M = GenGr->stator_grid_par.Row;
+        N = GenGr->stator_grid_par.Col;
+    }
+    if (g->type == oneDGrid)
+        {
+            for (i = 0; i < N; i++)
             {
-                Chxh        = g->chxh [(mm) * (g->sizeY-1) + (nn)];
-                Hx          = g->hx   [(mm) * (g->sizeY-1) + (nn)];
-                Chxe        = g->chxe [(mm) * (g->sizeY-1) + (nn)];
-                Ez_next_x   = g->ez   [(mm) * g->sizeY + (nn +1 )];
-                Ez          = g->ez   [(mm) * g->sizeY + (nn)];
-                g->hx   [(mm) * (g->sizeY-1) + (nn)] = Chxh * Hx - Chxe * (Ez_next_x - Ez);
+                Chyh        = g->chyh[i];
+                Hy          = g->hy[i];
+                Chye        = g->chye[i];
+                Ez_next_x   = g->ez[i + 1];
+                Ez          = g->ez[i];
+                g->hy[i]   = Chyh * Hy + Chye * (Ez_next_x - Ez);
             }
+        }
+    else {
+        for (i = 0; i < N; i++)
+            for (j = 0; j < M - 2; j++)
+            {
+                    Chxh        = g->chxh [j  + i * M];
+                    Hx          = g->hx   [j  + i * M];
+                    Chxe        = g->chxe [j  + i * M];
+                    Ez_next_x   = g->ez   [j  + i * M];
+                    Ez          = g->ez   [j  + i * M];
+                    g->hx   [j  + i * M] = Chxh * Hx - Chxe * (Ez_next_x - Ez);
+                }
 
-        for (mm = 0; mm < g->sizeX - 1; mm++)
-            for (nn = 0; nn < g->sizeY; nn++)
+        for (i = 0; i < N; i++)
+            for (j = 0; j < M - 2; j++)
             {
-                Chyh        = g->chyh [(mm) * g->sizeY + (nn)];
-                Hy          = g->hy   [(mm) * g->sizeY + (nn)];
-                Chye        = g->chye [(mm) * g->sizeY + (nn)];
-                Ez_next_y   = g->ez   [(mm + 1) * g->sizeY + (nn)];
-                Ez          = g->ez   [(mm) * g->sizeY + (nn)];
-                g->hy   [(mm) * g->sizeY + (nn)] = Chyh * Hy + Chye * (Ez_next_y - Ez);
-            }
-     }
-*/
+                    Chyh        = g->chyh [j  + i * M];
+                    Hy          = g->hy   [j  + i * M];
+                    Chye        = g->chye [j  + i * M];
+                    Ez_next_y   = g->ez   [j  + i * M];
+                    Ez          = g->ez   [j  + i * M];
+                    g->hy   [j  + i * M] = Chyh * Hy + Chye * (Ez_next_y - Ez);
+                }
+         }
+
     return;
 }
 
 /* update electric field */
-void Fdtd_calc::updateE2d(grid_fdtd *g) {
+void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)  {
     /*
 int mm, nn;
 //double EZcheck;
