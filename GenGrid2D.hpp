@@ -11,6 +11,8 @@ struct grid_data{
     int EH;
 
     int material;
+
+    bool source;
 };
 
 class GenGrid2D

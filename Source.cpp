@@ -1,6 +1,6 @@
 ﻿#include "Header.hpp"
 
-CurrentSource::CurrentSource(int Nsh_in, double dT_in, double Imax_sin_in, double f_in, double Psi_0_in)
+Source::Source(int Nsh_in, double dT_in, double Imax_sin_in, double f_in, double Psi_0_in)
 {
     Imax_sin    =   Imax_sin_in;
     Psi_0       =   Psi_0_in;
@@ -12,13 +12,13 @@ CurrentSource::CurrentSource(int Nsh_in, double dT_in, double Imax_sin_in, doubl
     double ppw = 30.0;
 }
 
-void CurrentSource::CurrentSourceSinSize()
+void Source::SourceSinSize()
 {
     I_sin.resize(Nsh);
     time.resize(Nsh);
 }
 
-void CurrentSource::CurrentSourceSinCreate ()
+void Source::SourceSinCreate ()
 {
     for (int i = 0; i < Nsh; i++)
     {
@@ -35,9 +35,42 @@ void CurrentSource::CurrentSourceSinCreate ()
     }
 }
 
+void Source::SourceE (grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
+{
+    unsigned int i, j;
+    unsigned int M, N;
+
+    if (part)
+    {
+        M = GenGr->rotor_grid_par.Row;
+        N = GenGr->rotor_grid_par.Col;
+
+        for (i = 0; i < N; i++)
+            for (j = 0; j < (M - 2 - 1); j++)
+            {
+                if( GenGr->rot_grid_pos[j + i*M].source)
+                    g->ez   [j  + i * M] = 20000;
+            }
+    }
+    else
+    {
+        M = GenGr->stator_grid_par.Row;
+        N = GenGr->stator_grid_par.Col;
+
+        for (i = 0; i < N; i++)
+            for (j = 0; j < (M - 2 - 1); j++)
+            {
+                if( GenGr->stat_grid_pos[j + i*M].source)
+                    g->ez   [j  + i * M] = 10000;
+            }
+    }
+
+
+}
+
+/*
 static double cdtds, ppw = 0;
 
-/* initialize source-function variables */
 void ezIncInit(grid_fdtd *g){
 
         printf("Enter the points per wavelength for Ricker source: ");
@@ -48,7 +81,6 @@ void ezIncInit(grid_fdtd *g){
         return;
 }
 
-/* calculate source function at given time and location */
 double ezInc(double time, double location) {
     double arg;
 
@@ -64,9 +96,9 @@ double ezInc(double time, double location) {
 
 return (1.0 - 2.0 * arg) * exp(-arg);
 }
+*/
 
-
-CurrentSource::~CurrentSource()
+Source::~Source()
 {
 
 }

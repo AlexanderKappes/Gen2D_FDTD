@@ -117,11 +117,11 @@ void Materials::Materials_array(GenGrid2D *GenGr, bool part)
 
     if (part)
     {
-        ArrOutText (strPath, "rot_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, rot_mat);
+        ArrOutText (strPath + "\\Materials\\", "rot_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, rot_mat);
     }
     else
     {
-        ArrOutText (strPath, "stat_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, stat_mat);
+        ArrOutText (strPath + "\\Materials\\", "stat_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, stat_mat);
     }
 }
 
@@ -129,9 +129,7 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
 {
 
     int i, j;
-
-    int M;
-    int N;
+    int M, N;
     //QVector<material_par> *arr_mat;
     //Ротор
     //1 - клин, 2 - обмотка, 3 - сталь
@@ -193,15 +191,15 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
                 g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy);
 
             }
-        ArrOutText (strPath, "Ceze_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->ceze);
-        ArrOutText (strPath, "Cezhx_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhx);
-        ArrOutText (strPath, "Cezhy_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhy);
-        ArrOutText (strPath, "Chxh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxh);
-        ArrOutText (strPath, "Chxe_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxe);
-        ArrOutText (strPath, "Chyh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chyh);
-        ArrOutText (strPath, "Chye_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chye);
-        ArrOutText (strPath, "dX_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dx);
-        ArrOutText (strPath, "dY_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dy);
+        ArrOutText (strPath + "\\Coefficients\\", "Ceze_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->ceze);
+        ArrOutText (strPath + "\\Coefficients\\", "Cezhx_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhx);
+        ArrOutText (strPath + "\\Coefficients\\", "Cezhy_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhy);
+        ArrOutText (strPath + "\\Coefficients\\", "Chxh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxh);
+        ArrOutText (strPath + "\\Coefficients\\", "Chxe_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxe);
+        ArrOutText (strPath + "\\Coefficients\\", "Chyh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chyh);
+        ArrOutText (strPath + "\\Coefficients\\", "Chye_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chye);
+        ArrOutText (strPath + "\\Position\\", "dX_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dx);
+        ArrOutText (strPath + "\\Position\\", "dY_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dy);
     }
     else
     {
@@ -225,15 +223,15 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
                 g->cezhx [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dx);
                 g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy);
             }
-        ArrOutText (strPath, "Ceze_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->ceze);
-        ArrOutText (strPath, "Cezhx_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhx);
-        ArrOutText (strPath, "Cezhy_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhy);
-        ArrOutText (strPath, "Chxh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxh);
-        ArrOutText (strPath, "Chxe_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxe);
-        ArrOutText (strPath, "Chyh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chyh);
-        ArrOutText (strPath, "Chye_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chye);
-        ArrOutText (strPath, "dX_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dx);
-        ArrOutText (strPath, "dY_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dy);
+        ArrOutText (strPath + "\\Coefficients\\", "Ceze_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->ceze);
+        ArrOutText (strPath + "\\Coefficients\\", "Cezhx_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhx);
+        ArrOutText (strPath + "\\Coefficients\\", "Cezhy_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhy);
+        ArrOutText (strPath + "\\Coefficients\\", "Chxh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxh);
+        ArrOutText (strPath + "\\Coefficients\\", "Chxe_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxe);
+        ArrOutText (strPath + "\\Coefficients\\", "Chyh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chyh);
+        ArrOutText (strPath + "\\Coefficients\\", "Chye_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chye);
+        ArrOutText (strPath + "\\Position\\", "dX_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dx);
+        ArrOutText (strPath + "\\Position\\", "dY_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dy);
     }
 
     return;
