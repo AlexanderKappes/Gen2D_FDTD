@@ -44,8 +44,6 @@ MainWindow::MainWindow(QWidget *parent)
     customPlot(ui->CP_Construct, "Generator geometry");
     customPlot_ConstructSet();
 
-    customPlot(ui->CP_EM_Field, "Electromagnetic field");
-
     ui->CP_Construct->replot();
 
     double end_time = clock(); // конечное время
@@ -57,9 +55,7 @@ void MainWindow::customPlot(QCustomPlot *CP, QString NameCP)
 {
     CP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
                                     QCP::iSelectLegend | QCP::iSelectPlottables);// Флаги выставляются по или, Drag - таскать, Zoom - зумить, Axes - оси, Legend - легенда, SelectPlottables - выделять
-    //Выставляем диапазон осей, который будет показываться
-    //ui->customPlot1->xAxis->setRange(-8, 8);
-    //ui->customPlot1->yAxis->setRange(-5, 5);
+
     CP->axisRect()->setupFullAxesBox();// функция axisRect выдает указатель на объект Rect; setupFullAxesBox - отрисовываем две оси
       //тут мы создали все сразу с осями
     CP->plotLayout()->insertRow(0); //insertRow(0) - функция, которая вставляет данные, здесь он пустой

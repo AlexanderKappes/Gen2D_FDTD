@@ -4,16 +4,22 @@
 #include "Header.hpp"
 
 
-class ImageField
+class ImageField: public QObject
 {
+
 public:
-    ImageField();
+    ImageField(QCustomPlot *CP, QString NameCP);
     ~ImageField();
 
-    QCPColorMap *colorMap1;
-    QCPColorScale *colorScale1;
-    QCPMarginGroup *marginGroup1;
-    void addSnapshot(QCustomPlot *Cp, int Nt, grid_fdtd *g, GenGrid2D *GenGr, bool part);
+    QCPColorMap *colorMapIF;
+    QCPColorScale *colorScaleIF;
+    QCPMarginGroup *marginGroupIF;
+    void addSnapshot(QCustomPlot *Cp, int Nt, grid_fdtd *g_r, grid_fdtd *g_s, GenGrid2D *GenGr, GenGeom2D *GenGeom);
+    void OpenFiles(std::string nameFile, int Nt, int &N, int &M, bool part);
+
+    double* ez_IF_r;
+    double* ez_IF_s;
+
 };
 
 #endif // IMAGEFIELD_HPP

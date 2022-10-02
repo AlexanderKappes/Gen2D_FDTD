@@ -5,10 +5,10 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
-    ImageField  FI;
+    ImageField  FI(w.ui->CP_EM_Field, "Electromagnetic field");
     double start_time =  clock(); // начальное время
 
-    int im_Out = 10000;
+    int im_Out = 1000;
 
     double maxTime = w.dT_em*im_Out;
 
@@ -38,8 +38,7 @@ int main(int argc, char *argv[])
     } // end of time-stepping
     //*/
 
-    FI.addSnapshot(w.ui->CP_EM_Field, im_Out, &g_r, &w.GenGrid, true);
-    FI.addSnapshot(w.ui->CP_EM_Field, im_Out, &g_s, &w.GenGrid, false);
+    FI.addSnapshot(w.ui->CP_EM_Field, im_Out, &g_r, &g_s, &w.GenGrid, &w.GenGeom);
 
     double end_time = clock(); // конечное время
 
