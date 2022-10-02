@@ -9,10 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     double start_time =  clock(); // начальное время
 
-
     arg_beg = 0.0 * M_PI/180;
 
-    FI.addSnapshot(ui->CP_EM_Field, 100);
     GenGeom.init_rotor   ();
     GenGeom.init_stator  ();
     GenGrid.Gen_Grid_Vector_init(&GenGeom);
@@ -21,8 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     GenGrid.Gen_Grid_Pos_stat(&GenGeom);
     Mat.Materials_array(&GenGrid, true);
     Mat.Materials_array(&GenGrid, false);
-    Mat.gridInit(&g_r, &GenGrid, dT_em, true);
-    Mat.gridInit(&g_s, &GenGrid, dT_em, false);
+
     //Установить в окошках параметры по умолчанию
     ParGeomSet      ();
     ParGenGridSet   ();
@@ -40,14 +37,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     IW.add_Curve(ui, &GenGraph, &GenGeom, ui->CP_EM_Field, false, false);
 
-    CurS.CurrentSourceSinSize();
-    CurS.CurrentSourceSinCreate ();
+    CurS.SourceSinSize();
+    CurS.SourceSinCreate ();
     ParCurSourceSet ();
     ChangeFunc();
     customPlot(ui->CP_Construct, "Generator geometry");
     customPlot_ConstructSet();
-
-    customPlot(ui->CP_EM_Field, "Electromagnetic field");
 
     ui->CP_Construct->replot();
 
@@ -60,9 +55,7 @@ void MainWindow::customPlot(QCustomPlot *CP, QString NameCP)
 {
     CP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
                                     QCP::iSelectLegend | QCP::iSelectPlottables);// Флаги выставляются по или, Drag - таскать, Zoom - зумить, Axes - оси, Legend - легенда, SelectPlottables - выделять
-    //Выставляем диапазон осей, который будет показываться
-    //ui->customPlot1->xAxis->setRange(-8, 8);
-    //ui->customPlot1->yAxis->setRange(-5, 5);
+
     CP->axisRect()->setupFullAxesBox();// функция axisRect выдает указатель на объект Rect; setupFullAxesBox - отрисовываем две оси
       //тут мы создали все сразу с осями
     CP->plotLayout()->insertRow(0); //insertRow(0) - функция, которая вставляет данные, здесь он пустой
@@ -574,7 +567,12 @@ void MainWindow::on_show_field_coil_checkBox_toggled(bool checked)
 void MainWindow::on_PB_source_new_clicked()
 {
     ParCurSourceGet ();
-    CurS.CurrentSourceSinSize();
-    CurS.CurrentSourceSinCreate ();
+    CurS.SourceSinSize();
+    CurS.SourceSinCreate ();
     ChangeFunc();
+}
+
+void MainWindow::time_em_Label(double time)
+{
+    ui->time_em->setText(QString::fromStdString(std::to_string(time) + " мс"));
 }

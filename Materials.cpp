@@ -117,11 +117,11 @@ void Materials::Materials_array(GenGrid2D *GenGr, bool part)
 
     if (part)
     {
-        ArrOutText (strPath, "rot_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, rot_mat);
+        ArrOutText (strPath + "\\Materials\\", "rot_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, rot_mat);
     }
     else
     {
-        ArrOutText (strPath, "stat_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, stat_mat);
+        ArrOutText (strPath + "\\Materials\\", "stat_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, stat_mat);
     }
 }
 
@@ -129,9 +129,7 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
 {
 
     int i, j;
-
-    int M;
-    int N;
+    int M, N;
     //QVector<material_par> *arr_mat;
     //Ротор
     //1 - клин, 2 - обмотка, 3 - сталь
@@ -193,15 +191,15 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
                 g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy);
 
             }
-        ArrOutText (strPath, "Ceze_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->ceze);
-        ArrOutText (strPath, "Cezhx_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhx);
-        ArrOutText (strPath, "Cezhy_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhy);
-        ArrOutText (strPath, "Chxh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxh);
-        ArrOutText (strPath, "Chxe_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxe);
-        ArrOutText (strPath, "Chyh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chyh);
-        ArrOutText (strPath, "Chye_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chye);
-        ArrOutText (strPath, "dX_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dx);
-        ArrOutText (strPath, "dY_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dy);
+        ArrOutText (strPath + "\\Coefficients\\", "Ceze_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->ceze);
+        ArrOutText (strPath + "\\Coefficients\\", "Cezhx_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhx);
+        ArrOutText (strPath + "\\Coefficients\\", "Cezhy_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhy);
+        ArrOutText (strPath + "\\Coefficients\\", "Chxh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxh);
+        ArrOutText (strPath + "\\Coefficients\\", "Chxe_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxe);
+        ArrOutText (strPath + "\\Coefficients\\", "Chyh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chyh);
+        ArrOutText (strPath + "\\Coefficients\\", "Chye_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chye);
+        ArrOutText (strPath + "\\Position\\", "dX_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dx);
+        ArrOutText (strPath + "\\Position\\", "dY_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dy);
     }
     else
     {
@@ -225,173 +223,16 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
                 g->cezhx [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dx);
                 g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy);
             }
-        ArrOutText (strPath, "Ceze_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->ceze);
-        ArrOutText (strPath, "Cezhx_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhx);
-        ArrOutText (strPath, "Cezhy_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhy);
-        ArrOutText (strPath, "Chxh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxh);
-        ArrOutText (strPath, "Chxe_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxe);
-        ArrOutText (strPath, "Chyh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chyh);
-        ArrOutText (strPath, "Chye_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chye);
-        ArrOutText (strPath, "dX_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dx);
-        ArrOutText (strPath, "dY_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dy);
+        ArrOutText (strPath + "\\Coefficients\\", "Ceze_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->ceze);
+        ArrOutText (strPath + "\\Coefficients\\", "Cezhx_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhx);
+        ArrOutText (strPath + "\\Coefficients\\", "Cezhy_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhy);
+        ArrOutText (strPath + "\\Coefficients\\", "Chxh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxh);
+        ArrOutText (strPath + "\\Coefficients\\", "Chxe_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxe);
+        ArrOutText (strPath + "\\Coefficients\\", "Chyh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chyh);
+        ArrOutText (strPath + "\\Coefficients\\", "Chye_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chye);
+        ArrOutText (strPath + "\\Position\\", "dX_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dx);
+        ArrOutText (strPath + "\\Position\\", "dY_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dy);
     }
 
     return;
-}
-
-void Materials::ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p, QVector<material_par> &arr_out)
-{
-
-    double temp;
-    char filename[100]= {0};
-    char basename[80]= {0};
-    char c_Path [80] = {0};
-    FILE *out;
-    std::string str_out;
-
-    for (int i = 0; i < 80; i ++)
-        basename[i] = base[i]; // store data as a float
-    for (std::string::size_type i = 0; i < strPath.length (); i ++) // строковый тип в тип char []
-        {
-            c_Path[i]=strPath[i];
-        }
-
-    sprintf(filename, "%s%s.txt", c_Path, basename);//s -string, d - double
-    out = fopen(filename, "w");
-
-    str_out = std::to_string(M) + " ";
-    fputs(str_out.c_str(), out);
-    str_out = std::to_string(N) + "\n";
-    fputs(str_out.c_str(), out);
-
-    int p = 0;
-
-    for (int i = 0; i < N; i++)
-    {
-        for (int j = 0; j < M; j++)
-        {
-            temp = arr_out[j + i*M].mu;
-            str_out = std::to_string(temp) + "\t";
-            fputs(str_out.c_str(), out);
-        }
-        fputs("\n", out);
-        p++;
-
-        if (p == Np_s)
-        {
-            fputs("\n", out);
-        }
-
-        if (p == Np_p + Np_s)
-        {
-            fputs("\n", out);
-            p = 0;
-        }
-    }
-    fclose(out); // close file
-}
-
-void Materials::ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p, double *arr_out)
-{
-
-    double temp;
-    char filename[100]= {0};
-    char basename[80]= {0};
-    char c_Path [80] = {0};
-    FILE *out;
-    std::string str_out;
-
-    for (int i = 0; i < 80; i ++)
-        basename[i] = base[i]; // store data as a float
-    for (std::string::size_type i = 0; i < strPath.length (); i ++) // строковый тип в тип char []
-        {
-            c_Path[i]=strPath[i];
-        }
-
-    sprintf(filename, "%s%s.txt", c_Path, basename);//s -string, d - double
-    out = fopen(filename, "w");
-
-    str_out = std::to_string(M) + " ";
-    fputs(str_out.c_str(), out);
-    str_out = std::to_string(N) + "\n";
-    fputs(str_out.c_str(), out);
-
-    int p = 0;
-
-    for (int i = 0; i < N; i++)
-    {
-        for (int j = 0; j < M; j++)
-        {
-            temp = arr_out[j + i*M];
-            str_out = std::to_string(temp) + "\t";
-            fputs(str_out.c_str(), out);
-        }
-        fputs("\n", out);
-        p++;
-
-        if (p == Np_s)
-        {
-            fputs("\n", out);
-        }
-
-        if (p == Np_p + Np_s)
-        {
-            fputs("\n", out);
-            p = 0;
-        }
-    }
-    fclose(out); // close file
-}
-
-void Materials::ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p, QVector<double> &arr_out)
-{
-
-    double temp;
-    char filename[100]= {0};
-    char basename[80]= {0};
-    char c_Path [80] = {0};
-    FILE *out;
-    std::string str_out;
-
-    for (int i = 0; i < 80; i ++)
-        basename[i] = base[i]; // store data as a float
-    for (std::string::size_type i = 0; i < strPath.length (); i ++) // строковый тип в тип char []
-        {
-            c_Path[i]=strPath[i];
-        }
-
-    sprintf(filename, "%s%s.txt", c_Path, basename);//s -string, d - double
-    out = fopen(filename, "w");
-
-    str_out = std::to_string(M) + " ";
-    fputs(str_out.c_str(), out);
-    str_out = std::to_string(N) + "\n";
-    fputs(str_out.c_str(), out);
-    fputs("\n", out);
-
-    int p = 0;
-
-    for (int i = 0; i < N; i++)
-    {
-        for (int j = 0; j < M; j++)
-        {
-            temp = arr_out[j + i*M];
-            str_out = std::to_string(temp) + "\t";
-            fputs(str_out.c_str(), out);
-        }
-        fputs("\n", out);
-        p++;
-
-        if (p == Np_s)
-        {
-            fputs("\n", out);
-        }
-
-        if (p == Np_p + Np_s)
-        {
-            fputs("\n", out);
-            p = 0;
-        }
-    }
-    fclose(out); // close file
 }

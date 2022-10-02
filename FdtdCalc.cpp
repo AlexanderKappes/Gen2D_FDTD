@@ -1,113 +1,144 @@
 ﻿#include "Header.hpp"
 
-Fdtd_calc::Fdtd_calc(grid_fdtd *g, int in_XSize, int in_YSize, int in_ZSize, double in_TX, double in_TY, double in_TZ, int   in_NT, double in_To, double in_dT)
+Fdtd_calc::Fdtd_calc()
 {
-    //Размер счетного пространства
-    XSize = in_XSize;
-    YSize = in_YSize;
-    ZSize = in_ZSize;
-    //Коэффициенты
-    TX = in_TX; //1/dX
-    TY = in_TY; //1/dY
-    TZ = in_TZ; //1/dZ
-
-    NT = in_NT;
-    To = in_To;//Исходное значение времени
-    dT = in_dT;
-
-    g->type = tmZGrid;
-    g->cdtds = 1.0 / sqrt(2.0); // Courant number
-    double imp0 = 377.0;
-
+    iH = 0;
+    iE = 0;
 }
 
 
-void Fdtd_calc::updateH2d(grid_fdtd *g) {
-    /*
-int mm, nn;
+void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, int im_out)
+{
+    unsigned int i, j;
+    unsigned int M, N;
 
-double Ez_next_y, Ez_next_x, Ez;
-double Chxh, Chxe, Chyh, Chye;
-double Hy, Hx;
+    double Ez_next_y, Ez_next_x, Ez;
+    double Chxh, Chxe, Chyh, Chye;
+    double Hy, Hx;
+    std::string strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\";
 
-if (g->type == oneDGrid)
+    if (part)
     {
-        for (mm = 0; mm < g->sizeX - 1; mm++)
-        {
-            Chyh        = g->chyh[mm];
-            Hy          = g->hy[mm];
-            Chye        = g->chye[mm];
-            Ez_next_x   = g->ez[mm + 1];
-            Ez          = g->ez[mm];
-            g->hy[mm]   = Chyh * Hy + Chye * (Ez_next_x - Ez);
-        }
+        M = GenGr->rotor_grid_par.Row;
+        N = GenGr->rotor_grid_par.Col;
     }
-else {
-        for (mm = 0; mm < g->sizeX; mm++)
-            for (nn = 0; nn < g->sizeY - 1; nn++)
+    else
+    {
+        M = GenGr->stator_grid_par.Row;
+        N = GenGr->stator_grid_par.Col;
+    }
+    if (g->type == oneDGrid)
+        {
+            for (i = 0; i < (N - 1); i++)
             {
-                Chxh        = g->chxh [(mm) * (g->sizeY-1) + (nn)];
-                Hx          = g->hx   [(mm) * (g->sizeY-1) + (nn)];
-                Chxe        = g->chxe [(mm) * (g->sizeY-1) + (nn)];
-                Ez_next_x   = g->ez   [(mm) * g->sizeY + (nn +1 )];
-                Ez          = g->ez   [(mm) * g->sizeY + (nn)];
-                g->hx   [(mm) * (g->sizeY-1) + (nn)] = Chxh * Hx - Chxe * (Ez_next_x - Ez);
+                Chyh        = g->chyh[i];
+                Hy          = g->hy[i];
+                Chye        = g->chye[i];
+                Ez_next_x   = g->ez[i + 1];
+                Ez          = g->ez[i]; 
+                g->hy[i]   = Chyh * Hy + Chye * (Ez_next_x - Ez);
             }
+        }
+    else {
+        for (i = 0; i < N; i++)
+            for (j = 0; j < (M - 2 - 1); j++)
+            {
+                    Chxh        = g->chxh [j  + i * M];
+                    Hx          = g->hx   [j  + i * M];
+                    Chxe        = g->chxe [j  + i * M];
+                    Ez_next_x   = g->ez   [(j + 1)  + i * M];
+                    Ez          = g->ez   [j  + i * M];
+                    g->hx   [j  + i * M] = Chxh * Hx - Chxe * (Ez_next_x - Ez);
+                }
 
-        for (mm = 0; mm < g->sizeX - 1; mm++)
-            for (nn = 0; nn < g->sizeY; nn++)
+        for (i = 0; i < N; i++)
+            for (j = 0; j < (M - 2 - 1); j++)
             {
-                Chyh        = g->chyh [(mm) * g->sizeY + (nn)];
-                Hy          = g->hy   [(mm) * g->sizeY + (nn)];
-                Chye        = g->chye [(mm) * g->sizeY + (nn)];
-                Ez_next_y   = g->ez   [(mm + 1) * g->sizeY + (nn)];
-                Ez          = g->ez   [(mm) * g->sizeY + (nn)];
-                g->hy   [(mm) * g->sizeY + (nn)] = Chyh * Hy + Chye * (Ez_next_y - Ez);
-            }
-     }
-*/
+                    Chyh        = g->chyh [j  + i * M];
+                    Hy          = g->hy   [j  + i * M];
+                    Chye        = g->chye [j  + i * M];
+                    Ez_next_y   = g->ez   [(j + 1)  + i * M];
+                    Ez          = g->ez   [j  + i * M];
+                    g->hy   [j  + i * M] = Chyh * Hy + Chye * (Ez_next_y - Ez);
+                }
+         }
+    iH++;
+
+    if (part && iH == im_out)
+    {
+        ArrOutText (strPath, "Hy_Rotor" + std::to_string(iH), N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->hy);
+        ArrOutText (strPath, "Hx_Rotor" + std::to_string(iH), N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->hx);
+    }
+    else if (!part && iH == im_out)
+    {
+        ArrOutText (strPath, "Hy_Stator" + std::to_string(iH), N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->hy);
+        ArrOutText (strPath, "Hx_Stator" + std::to_string(iH), N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->hx);
+    }
+
     return;
 }
 
 /* update electric field */
-void Fdtd_calc::updateE2d(grid_fdtd *g) {
-    /*
-int mm, nn;
-//double EZcheck;
+void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, int im_out)  {
 
-double Ez, Ceze, Cezhx, Cezhy;
-double Hy, Hy_pr, Hx, Hx_pr;
+    unsigned int i, j;
+    unsigned int M, N;
 
-if (g->type == oneDGrid)
+    double Ez, Ceze, Cezhx, Cezhy;
+    double Hy, Hy_pr, Hx, Hx_pr;
+
+    if (part)
     {
-        for (mm = 1; mm < g->sizeX - 1; mm++)
+        M = GenGr->rotor_grid_par.Row;
+        N = GenGr->rotor_grid_par.Col;
+    }
+    else
+    {
+        M = GenGr->stator_grid_par.Row;
+        N = GenGr->stator_grid_par.Col;
+    }
+    std::string strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\";
+
+    if (g->type == oneDGrid)
         {
-            Ez          = g->ez[mm];
-            Ceze        = g->ceze[mm];
-            Cezhx        = g->cezhx[mm];
-            Cezhy        = g->cezhy[mm];
-            Hy          = g->hy[mm];
-            Hy_pr       = g->hy[mm-1];
-            g->ez[mm]   = Ceze * Ez + Cezhx * (Hy - Hy_pr);
-        }
-    }
-else
-    {
-        for (mm = 1; mm < g->sizeX - 1; mm++)
-            for (nn = 1; nn < g->sizeY - 1; nn++)
+        for (i = 0; i < (N - 1); i++)
             {
-                Ez      = g->ez [(mm) * g->sizeY + (nn)];
-                Ceze    = g->ceze [(mm) * g->sizeY + (nn)];
-                Cezhx    = g->cezhx [(mm) * g->sizeY + (nn)];
-                Cezhy    = g->cezhy [(mm) * g->sizeY + (nn)];
-                Hy      = g->hy [(mm) * g->sizeY + (nn)];
-                Hy_pr   = g->hy [(mm - 1) * g->sizeY + (nn)];
-                Hx      = g->hx [(mm) * g->sizeY + (nn)];
-                Hx_pr   = g->hx [(mm) * g->sizeY + (nn - 1)];
-                g->ez [(mm) * g->sizeY + (nn)] = Ceze * Ez + Cezhx * (( Hy - Hy_pr) - ( Hx - Hx_pr));
+                Ez          = g->ez[i];
+                Ceze        = g->ceze[i];
+                Cezhx        = g->cezhx[i];
+                Cezhy        = g->cezhy[i];
+                Hy          = g->hy[i];
+                Hy_pr       = g->hy[i-1];
+                g->ez[i]   = Ceze * Ez + Cezhx * (Hy - Hy_pr);
             }
+        }
+    else
+        {
+        for (i = 0; i < (N - 1); i++)
+            for (j = 0; j < (M - 2 - 1); j++)
+            {
+                    Ez      = g->ez     [j  + i * M];
+                    Ceze    = g->ceze   [j  + i * M];
+                    Cezhx   = g->cezhx  [j  + i * M];
+                    Cezhy   = g->cezhy  [j  + i * M];
+                    Hy      = g->hy     [j  + i * M];
+                    Hy_pr   = g->hy     [j  + (i - 1) * M];
+                    Hx      = g->hx     [j  + i * M];
+                    Hx_pr   = g->hx     [(j - 1)  + i * M];
+                    g->ez [j  + i * M] = Ceze * Ez + Cezhx * (( Hy - Hy_pr) - ( Hx - Hx_pr));
+                }
+        }
+
+    iE++;
+
+    if (part && iE == im_out)
+    {
+        ArrOutText (strPath, "Ez_Rotor" + std::to_string(iE), N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->ez);
     }
-*/
+    else if (!part && iE == im_out)
+    {
+        ArrOutText (strPath, "Ez_Stator" + std::to_string(iE), N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->ez);
+    }
 return;
 }
 

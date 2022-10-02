@@ -24,9 +24,9 @@ public:
     const double psi_o = 0.0;
 
     const double TX_o = 1.0;    const double TY_o = 1.0;    const double TZ_o = 1.0;
-    const int Xsize_o = 10;      const int Ysize_o = 10;      const int Zsize_o = 10;
+    const int    Xsize_o = 10;      const int Ysize_o = 10;      const int Zsize_o = 10;
 
-    double dT_em = 0.00000001;
+    double dT_em = 0.0000001;//10^(-7)
 
     //double c = c_light;
     //double eo = epsilon_o;
@@ -37,17 +37,18 @@ public:
     GenGrid2D   GenGrid;
     GenGraph2D  GenGraph;
     ImageWork   IW;
-    ImageField  FI;
-    grid_fdtd g_r;
-    grid_fdtd g_s;
-    BoundCond BC;
-    CurrentSource CurS = CurrentSource(Nsh_o, dT_o, Imax_sin_o, f_o, psi_o);
-    Materials Mat;
-    Fdtd_calc   FDTD_R = Fdtd_calc(&g_r, Xsize_o, Ysize_o, Zsize_o, TX_o, TY_o, TZ_o, Nsh_o, T_o, dT_o);
-    Fdtd_calc   FDTD_S = Fdtd_calc(&g_s, Xsize_o, Ysize_o, Zsize_o, TX_o, TY_o, TZ_o, Nsh_o, T_o, dT_o);
+
+    BoundCond   BC;
+    Source CurS = Source(Nsh_o, dT_o, Imax_sin_o, f_o, psi_o);
+    Source S_Er = Source(Nsh_o, dT_o, Imax_sin_o, f_o, psi_o);
+    Source S_Es = Source(Nsh_o, dT_o, Imax_sin_o, f_o, psi_o);
+    Materials   Mat;
 
     double      arg_beg;
     QVector <double> sign_i_x, sign_i_y;
+
+    void time_em_Label(double time);
+    Ui::MainWindow *ui;
 
 private slots:
     void titleDoubleClick(QMouseEvent* event);
@@ -99,8 +100,7 @@ private:
    void ColorPlace();
    void customPlot(QCustomPlot *CP, QString NameCP);
    void customPlot_ConstructSet();
-   Ui::MainWindow *ui;
-
 
 };
+
 #endif // MAINWINDOW_H

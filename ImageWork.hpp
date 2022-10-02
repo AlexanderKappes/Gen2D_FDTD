@@ -5,6 +5,7 @@
 class ImageWork
 {
 
+
 public:
     ImageWork();
     ~ImageWork();
