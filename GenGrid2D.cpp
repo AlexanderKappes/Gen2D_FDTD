@@ -19,7 +19,7 @@ GenGrid2D::GenGrid2D()
 
     rotor_grid_par.M_w   = 4;
     rotor_grid_par.M_a   = 4;
-    rotor_grid_par.M_b   = 16;
+    rotor_grid_par.M_b   = 32;
     rotor_grid_par.M_air = 0;
 
     stator_grid_par.Nmax = 50;
@@ -383,7 +383,7 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
 
                     for (int lev=0;lev<stator_grid_par.n_level;lev++)    //ray level circle
                     {
-                        if((ray) < stator_grid_par.Np_s)
+                        if(ray < stator_grid_par.Np_s)
                             material = stat_mater_slot[lev];
                         else
                             material = stat_mater_pin[lev];

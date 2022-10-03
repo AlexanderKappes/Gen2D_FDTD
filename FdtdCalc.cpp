@@ -105,11 +105,11 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, 
             {
                 Ez          = g->ez[i];
                 Ceze        = g->ceze[i];
-                Cezhx        = g->cezhx[i];
-                Cezhy        = g->cezhy[i];
+                Cezhx       = g->cezhx[i];
+                Cezhy       = g->cezhy[i];
                 Hy          = g->hy[i];
                 Hy_pr       = g->hy[i-1];
-                g->ez[i]   = Ceze * Ez + Cezhx * (Hy - Hy_pr);
+                g->ez[i]    = Ceze * Ez + Cezhx * (Hy - Hy_pr);
             }
         }
     else

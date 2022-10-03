@@ -4,12 +4,18 @@
 void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p, QVector<material_par> &arr_out)
 {
 
-    double temp;
-    char filename[100]= {0};
+    double temp_mu, temp_epsilon, temp_sigma;
+    char filename_mu[100]= {0};
+    char filename_epsilon[100]= {0};
+    char filename_sigma[100]= {0};
     char basename[80]= {0};
     char c_Path [80] = {0};
-    FILE *out;
-    std::string str_out;
+    FILE *out_mu;
+    FILE *out_epsilon;
+    FILE *out_sigma;
+    std::string str_out_mu;
+    std::string str_out_epsilon;
+    std::string str_out_sigma;
 
     for (int i = 0; i < 80; i ++)
         basename[i] = base[i]; // store data as a float
@@ -18,13 +24,29 @@ void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, 
             c_Path[i]=strPath[i];
         }
 
-    sprintf(filename, "%s%s.txt", c_Path, basename);//s -string, d - double
-    out = fopen(filename, "w");
+    sprintf(filename_mu, "%s%s_mu.txt", c_Path, basename);//s -string, d - double
+    out_mu = fopen(filename_mu, "w");
 
-    str_out = std::to_string(M) + " ";
-    fputs(str_out.c_str(), out);
-    str_out = std::to_string(N) + "\n";
-    fputs(str_out.c_str(), out);
+    sprintf(filename_epsilon, "%s%s_epsilon.txt", c_Path, basename);//s -string, d - double
+    out_epsilon = fopen(filename_epsilon, "w");
+
+    sprintf(filename_sigma, "%s%s_sigma.txt", c_Path, basename);//s -string, d - double
+    out_sigma = fopen(filename_sigma, "w");
+
+    str_out_mu = std::to_string(M) + " ";
+    fputs(str_out_mu.c_str(), out_mu);
+    str_out_mu = std::to_string(N) + "\n";
+    fputs(str_out_mu.c_str(), out_mu);
+
+    str_out_epsilon = std::to_string(M) + " ";
+    fputs(str_out_epsilon.c_str(), out_epsilon);
+    str_out_epsilon = std::to_string(N) + "\n";
+    fputs(str_out_epsilon.c_str(), out_epsilon);
+
+    str_out_sigma = std::to_string(M) + " ";
+    fputs(str_out_sigma.c_str(), out_sigma);
+    str_out_sigma = std::to_string(N) + "\n";
+    fputs(str_out_sigma.c_str(), out_sigma);
 
     int p = 0;
 
@@ -32,31 +54,49 @@ void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, 
     {
         for (int j = 0; j < M; j++)
         {
-            //temp = arr_out[j + i*M].mu;
-            //temp = arr_out[j + i*M].epsilon;
-            temp = arr_out[j + i*M].sigma;
+            temp_mu = arr_out[j + i*M].mu;
+            temp_epsilon = arr_out[j + i*M].epsilon;
+            temp_sigma = arr_out[j + i*M].sigma;
             if (j != (M-1))
-                str_out = std::to_string(temp) + "\t";
+            {
+                str_out_mu = std::to_string(temp_mu) + "\t";
+                str_out_epsilon = std::to_string(temp_epsilon) + "\t";
+                str_out_sigma = std::to_string(temp_sigma) + "\t";
+            }
             else
-                str_out = std::to_string(temp);
+            {
+                str_out_mu = std::to_string(temp_mu);
+                str_out_epsilon = std::to_string(temp_epsilon);
+                str_out_sigma = std::to_string(temp_sigma);
+            }
 
-            fputs(str_out.c_str(), out);
+            fputs(str_out_mu.c_str(), out_mu);
+            fputs(str_out_epsilon.c_str(), out_epsilon);
+            fputs(str_out_sigma.c_str(), out_sigma);
         }
-        fputs("\n", out);
+        fputs("\n", out_mu);
+        fputs("\n", out_epsilon);
+        fputs("\n", out_sigma);
         p++;
 
         if (p == Np_s)
         {
-            fputs("\n", out);
+            fputs("\n", out_mu);
+            fputs("\n", out_epsilon);
+            fputs("\n", out_sigma);
         }
 
         if (p == Np_p + Np_s)
         {
-            fputs("\n", out);
+            fputs("\n", out_mu);
+            fputs("\n", out_epsilon);
+            fputs("\n", out_sigma);
             p = 0;
         }
     }
-    fclose(out); // close file
+    fclose(out_mu); // close file
+    fclose(out_epsilon); // close file
+    fclose(out_sigma); // close file
 }
 
 void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p, QVector<grid_data> &arr_out)
