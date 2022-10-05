@@ -19,7 +19,7 @@ GenGrid2D::GenGrid2D()
 
     rotor_grid_par.M_w   = 4;
     rotor_grid_par.M_a   = 4;
-    rotor_grid_par.M_b   = 16;
+    rotor_grid_par.M_b   = 32;
     rotor_grid_par.M_air = 0;
 
     stator_grid_par.Nmax = 50;
@@ -197,7 +197,7 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
 
     int material = 0;
     int id = 0;
-
+    bool slot_work = false;
 
     for(int pole=0;pole<G->rot_par.n_pole;pole++)//Цикл по колличеству полюсов
         {
@@ -206,6 +206,9 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
             //Цикл по числу рабочих пазов на один полюс (26 шагов)
             for(int slot=0;slot<G->rot_par.n_slot_pin_pole;slot++,pole_coil_slot_cnt--)//slot circle
             {
+                if(slot < G->rot_par.n_coil_slot/2) slot_work = true;
+                else slot_work = false;
+
                 double x[rotor_grid_par.Nmax];
                 double y[rotor_grid_par.Nmax];
                 double arg[rotor_grid_par.Nmax];
@@ -241,7 +244,7 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
 
                     for (int lev=0;lev<rotor_grid_par.n_level;lev++)    //ray level circle
                     {
-                        if((ray) < rotor_grid_par.Np_s)
+                        if(ray < rotor_grid_par.Np_s && slot_work)
                             material = rot_mater_slot[lev];
                         else
                             material = rot_mater_pin[lev];
@@ -380,7 +383,7 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
 
                     for (int lev=0;lev<stator_grid_par.n_level;lev++)    //ray level circle
                     {
-                        if((ray) < stator_grid_par.Np_s)
+                        if(ray < stator_grid_par.Np_s)
                             material = stat_mater_slot[lev];
                         else
                             material = stat_mater_pin[lev];
