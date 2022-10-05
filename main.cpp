@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     ImageField  FI(w.ui->CP_EM_Field, "Electromagnetic field");
     double start_time =  clock(); // начальное время
 
-    int im_Out = 10;
+    int im_Out = 2;
 
     double maxTime = w.dT_em*im_Out;
 

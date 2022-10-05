@@ -17,15 +17,15 @@ Materials::Materials()
 
 void Materials::Materials_array(GenGrid2D *GenGr, bool part)
 {
-    rot_wedge               = set_material_data(1.0             ,    1.0        ,    0.0            );//rot - 1
-    rot_arm                 = set_material_data(0.999994        ,    1.0        ,    59590000.000   );//rot - 2
-    rot_steel               = set_material_data(477.57171205428 ,    1.0        ,    0.0            );//rot - 3
+    rot_wedge               = set_material_data(0.0000012566370 ,    0.00000000000885419    ,    0.0            );//rot - 1
+    rot_arm                 = set_material_data(0.0000012566295 ,    0.00000000000885419    ,    59590000.000   );//rot - 2
+    rot_steel               = set_material_data(0.0006001342835 ,    0.00000000000885419    ,    0.0            );//rot - 3
 
-    stat_air                = set_material_data(1.00000037      ,    1.0001959  ,    0.0            );//stat - 1
-    stat_wedge              = set_material_data(1.0             ,    1.0        ,    0.0            );//stat - 2
-    stat_arm                = set_material_data(0.999994        ,    1.0        ,    59590000.000   );//stat - 3
-    stat_steel_across       = set_material_data(3958.85448744299,    1.0        ,    0.0            );//stat - 4
-    stat_steel_along        = set_material_data(4918.34363619326,    1.0        ,    0.0            );//stat - 5
+    stat_air                = set_material_data(0.0000012566375 ,    0.00000000000885592    ,    0.0            );//stat - 1
+    stat_wedge              = set_material_data(0.0000012566370 ,    0.00000000000885419    ,    0.0            );//stat - 2
+    stat_arm                = set_material_data(0.0000012566295 ,    0.00000000000885419    ,    59590000.000   );//stat - 3
+    stat_steel_across       = set_material_data(0.0049748430265 ,    0.00000000000885419    ,    0.0            );//stat - 4
+    stat_steel_along        = set_material_data(0.0061805725920 ,    0.00000000000885419    ,    0.0            );//stat - 5
 
     int M;
     int N;
