@@ -101,7 +101,7 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, 
 
     if (g->type == oneDGrid)
         {
-        for (i = 0; i < (N - 1); i++)
+        for (i = 1; i < (N - 1); i++)
             {
                 Ez          = g->ez[i];
                 Ceze        = g->ceze[i];
@@ -114,7 +114,7 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, 
         }
     else
         {
-        for (i = 0; i < (N - 1); i++)
+        for (i = 1; i < (N - 1); i++)
             for (j = 0; j < (M - 2 - 1); j++)
             {
                     Ez      = g->ez     [j  + i * M];
