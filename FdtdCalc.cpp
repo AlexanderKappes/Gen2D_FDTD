@@ -15,7 +15,12 @@ void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, 
     double Ez_next_y, Ez_next_x, Ez;
     double Chxh, Chxe, Chyh, Chye;
     double Hy, Hx;
-    std::string strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\";
+    std::string strPath;
+
+    if (part)
+        strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\Rotor\\";
+    else
+        strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\Stator\\";
 
     if (part)
     {
@@ -86,6 +91,7 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, 
 
     double Ez, Ceze, Cezhx, Cezhy;
     double Hy, Hy_pr, Hx, Hx_pr;
+    std::string strPath;
 
     if (part)
     {
@@ -97,7 +103,10 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, 
         M = GenGr->stator_grid_par.Row;
         N = GenGr->stator_grid_par.Col;
     }
-    std::string strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\";
+    if (part)
+        strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\Rotor\\";
+    else
+        strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\Stator\\";
 
     if (g->type == oneDGrid)
         {

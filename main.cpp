@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     ImageField  FI(w.ui->CP_EM_Field, "Electromagnetic field");
     double start_time =  clock(); // начальное время
 
-    int im_Out = 2;
+    int im_Out = 1;
 
     double maxTime = w.dT_em*im_Out;
 
@@ -24,15 +24,16 @@ int main(int argc, char *argv[])
     //snapshotInit2d(go); // initialize snapshots
 
     ///*
-    for ( double time = 0.0; time < maxTime; time+=w.dT_em) {
+    for ( double time = 0.0; time <= maxTime; time+=w.dT_em) {
 
         w.S_Er.SourceE (&g_r, &w.GenGrid, w.dT_em, true);
         w.S_Es.SourceE (&g_s, &w.GenGrid, w.dT_em, false);
 
-        FDTD_R.updateH2d(&g_r, &w.GenGrid, w.dT_em, true, im_Out); // update magnetic fields
-        FDTD_R.updateE2d(&g_r, &w.GenGrid, w.dT_em, true, im_Out); // update electric fields
         FDTD_S.updateH2d(&g_s, &w.GenGrid, w.dT_em, false, im_Out); // update magnetic fields
         FDTD_S.updateE2d(&g_s, &w.GenGrid, w.dT_em, false, im_Out); // update electric fields
+        FDTD_R.updateH2d(&g_r, &w.GenGrid, w.dT_em, true, im_Out); // update magnetic fields
+        FDTD_R.updateE2d(&g_r, &w.GenGrid, w.dT_em, true, im_Out); // update electric fields
+
         //w.BC.abc(&w.g_s); // apply ABC
         //snapshot2d(go, w.strPath); // take a snapshot (if appropriate)
     } // end of time-stepping

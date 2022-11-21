@@ -117,11 +117,11 @@ void Materials::Materials_array(GenGrid2D *GenGr, bool part)
 
     if (part)
     {
-        ArrOutText (strPath + "\\Materials\\", "rot_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, rot_mat);
+        ArrOutText (strPath + "\\Materials\\Rotor\\", "rot_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, rot_mat);
     }
     else
     {
-        ArrOutText (strPath + "\\Materials\\", "stat_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, stat_mat);
+        ArrOutText (strPath + "\\Materials\\Stator\\", "stat_mat", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, stat_mat);
     }
 }
 
@@ -191,15 +191,15 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
                 g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy);
 
             }
-        ArrOutText (strPath + "\\Coefficients\\", "Ceze_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->ceze);
-        ArrOutText (strPath + "\\Coefficients\\", "Cezhx_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhx);
-        ArrOutText (strPath + "\\Coefficients\\", "Cezhy_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhy);
-        ArrOutText (strPath + "\\Coefficients\\", "Chxh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxh);
-        ArrOutText (strPath + "\\Coefficients\\", "Chxe_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxe);
-        ArrOutText (strPath + "\\Coefficients\\", "Chyh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chyh);
-        ArrOutText (strPath + "\\Coefficients\\", "Chye_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chye);
-        ArrOutText (strPath + "\\Position\\", "dX_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dx);
-        ArrOutText (strPath + "\\Position\\", "dY_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dy);
+        ArrOutText (strPath + "\\Coefficients\\Rotor\\", "Ceze_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->ceze);
+        ArrOutText (strPath + "\\Coefficients\\Rotor\\", "Cezhx_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhx);
+        ArrOutText (strPath + "\\Coefficients\\Rotor\\", "Cezhy_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhy);
+        ArrOutText (strPath + "\\Coefficients\\Rotor\\", "Chxh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxh);
+        ArrOutText (strPath + "\\Coefficients\\Rotor\\", "Chxe_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chxe);
+        ArrOutText (strPath + "\\Coefficients\\Rotor\\", "Chyh_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chyh);
+        ArrOutText (strPath + "\\Coefficients\\Rotor\\", "Chye_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->chye);
+        ArrOutText (strPath + "\\Position\\Rotor\\", "dX_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dx);
+        ArrOutText (strPath + "\\Position\\Rotor\\", "dY_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, GenGr->rot_dy);
     }
     else
     {
@@ -223,15 +223,15 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
                 g->cezhx [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dx);
                 g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy);
             }
-        ArrOutText (strPath + "\\Coefficients\\", "Ceze_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->ceze);
-        ArrOutText (strPath + "\\Coefficients\\", "Cezhx_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhx);
-        ArrOutText (strPath + "\\Coefficients\\", "Cezhy_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhy);
-        ArrOutText (strPath + "\\Coefficients\\", "Chxh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxh);
-        ArrOutText (strPath + "\\Coefficients\\", "Chxe_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxe);
-        ArrOutText (strPath + "\\Coefficients\\", "Chyh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chyh);
-        ArrOutText (strPath + "\\Coefficients\\", "Chye_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chye);
-        ArrOutText (strPath + "\\Position\\", "dX_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dx);
-        ArrOutText (strPath + "\\Position\\", "dY_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dy);
+        ArrOutText (strPath + "\\Coefficients\\Stator\\", "Ceze_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->ceze);
+        ArrOutText (strPath + "\\Coefficients\\Stator\\", "Cezhx_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhx);
+        ArrOutText (strPath + "\\Coefficients\\Stator\\", "Cezhy_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhy);
+        ArrOutText (strPath + "\\Coefficients\\Stator\\", "Chxh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxh);
+        ArrOutText (strPath + "\\Coefficients\\Stator\\", "Chxe_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chxe);
+        ArrOutText (strPath + "\\Coefficients\\Stator\\", "Chyh_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chyh);
+        ArrOutText (strPath + "\\Coefficients\\Stator\\", "Chye_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->chye);
+        ArrOutText (strPath + "\\Position\\Stator\\", "dX_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dx);
+        ArrOutText (strPath + "\\Position\\Stator\\", "dY_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  GenGr->stat_dy);
     }
 
     return;

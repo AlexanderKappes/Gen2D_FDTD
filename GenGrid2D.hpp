@@ -7,12 +7,19 @@ struct grid_data{
     double y;
     int sector;
     int point_num;
-
-    int EH;
-
+    int EH; // EH = 1 - Ez
+            // EH = 2 - Hx
+            // EH = 3 - Hy
     int material;
-
+            //Ротор
+            //1 - клин, 2 - обмотка, 3 - сталь
+            //Статор
+            //1 - воздух, 2 - клин, 3 - обмотка, 4 - сталь поперек
+            //5 - сталь вдоль
     bool source;
+    double EHnumX;
+    double EHnumY;
+
 };
 
 class GenGrid2D

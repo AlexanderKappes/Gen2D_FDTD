@@ -99,7 +99,7 @@ void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, 
     fclose(out_sigma); // close file
 }
 
-void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p, QVector<grid_data> &arr_out)
+void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p, QVector<grid_data> &arr_out, int gd)
 {
 
     double temp;
@@ -108,6 +108,47 @@ void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, 
     char c_Path [80] = {0};
     FILE *out;
     std::string str_out;
+    char name_gd[10];
+    // 1 - x;
+    // 2 - y;
+    // 3 - sector;
+    // 4 - point_num;
+    // 5 - EH;
+    // 6 - material;
+    // 7 - source;
+    // 8 - EHnumX;
+    // 9 - EHnumY;
+    switch (gd) {
+        case 1:
+            strcpy(name_gd, "x");
+        break;
+        case 2:
+            strcpy(name_gd, "y");
+        break;
+        case 3:
+            strcpy(name_gd, "sector");
+        break;
+        case 4:
+            strcpy(name_gd, "point_num");
+        break;
+        case 5:
+            strcpy(name_gd, "EH");
+        break;
+        case 6:
+            strcpy(name_gd, "material");
+        break;
+        case 7:
+            strcpy(name_gd, "source");
+        break;
+        case 8:
+            strcpy(name_gd, "EHnumX");
+        break;
+        case 9:
+            strcpy(name_gd, "EHnumY");
+        break;
+        default:
+            strcpy(name_gd, "EH");
+    }
 
     for (int i = 0; i < 80; i ++)
         basename[i] = base[i]; // store data as a float
@@ -116,7 +157,7 @@ void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, 
             c_Path[i]=strPath[i];
         }
 
-    sprintf(filename, "%s%s.txt", c_Path, basename);//s -string, d - double
+    sprintf(filename, "%s%s_%s.txt", c_Path, basename, name_gd);//s -string, d - double
     out = fopen(filename, "w");
 
     str_out = std::to_string(M) + " ";
@@ -130,9 +171,39 @@ void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, 
     {
         for (int j = 0; j < M; j++)
         {
-            //temp = arr_out[j + i*M].mu;
-            //temp = arr_out[j + i*M].epsilon;
-            temp = arr_out[j + i*M].source;
+
+            switch (gd) {
+                case 1:
+                    temp = arr_out[j + i*M].x;
+                break;
+                case 2:
+                    temp = arr_out[j + i*M].y;
+                break;
+                case 3:
+                    temp = arr_out[j + i*M].source;
+                break;
+                case 4:
+                    temp = arr_out[j + i*M].point_num;
+                break;
+                case 5:
+                    temp = arr_out[j + i*M].EH;
+                break;
+                case 6:
+                    temp = arr_out[j + i*M].material;
+                break;
+                case 7:
+                    temp = arr_out[j + i*M].source;
+                break;
+                case 8:
+                    temp = arr_out[j + i*M].EHnumX;
+                break;
+                case 9:
+                    temp = arr_out[j + i*M].EHnumY;
+                break;
+                default:
+                    temp = arr_out[j + i*M].EH;
+            }
+
             if (j != (M-1))
                 str_out = std::to_string(temp) + "\t";
             else
