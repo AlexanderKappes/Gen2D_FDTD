@@ -19,13 +19,13 @@ void Materials::Materials_array(GenGrid2D *GenGr, bool part)
 {
     rot_wedge               = set_material_data(0.0000012566370 ,    0.00000000000885419    ,    0.0            );//rot - 1
     rot_arm                 = set_material_data(0.0000012566295 ,    0.00000000000885419    ,    59590000.000   );//rot - 2
-    rot_steel               = set_material_data(0.0006001342835 ,    0.00000000000885419    ,    0.0            );//rot - 3
+    rot_steel               = set_material_data(477.57171205428 ,    0.00000000000885419    ,    0.0            );//rot - 3
 
     stat_air                = set_material_data(0.0000012566375 ,    0.00000000000885592    ,    0.0            );//stat - 1
     stat_wedge              = set_material_data(0.0000012566370 ,    0.00000000000885419    ,    0.0            );//stat - 2
     stat_arm                = set_material_data(0.0000012566295 ,    0.00000000000885419    ,    59590000.000   );//stat - 3
-    stat_steel_across       = set_material_data(0.0049748430265 ,    0.00000000000885419    ,    0.0            );//stat - 4
-    stat_steel_along        = set_material_data(0.0061805725920 ,    0.00000000000885419    ,    0.0            );//stat - 5
+    stat_steel_across       = set_material_data(3958.8544874429900 ,    0.00000000000885419    ,    0.0            );//stat - 4
+    stat_steel_along        = set_material_data(4918.3436361932600 ,    0.00000000000885419    ,    0.0            );//stat - 5
 
     int M;
     int N;
