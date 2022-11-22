@@ -46,9 +46,6 @@ class GenGrid2D
 
         int grid_mark_size;
 
-        int rot_grid_x_size;    int rot_grid_y_size;
-        int stat_grid_x_size;   int stat_grid_y_size;
-
         QVector<int> rot_mater_pin;
         QVector<int> rot_mater_slot;
         QVector<int> stat_mater_pin;
