@@ -1,6 +1,7 @@
 ﻿#ifndef ComGrid_H
 #define ComGrid_H
 #include "Header.hpp"
+#include "Constant.hpp"
 
 struct grid_data{
     double x;
@@ -22,6 +23,22 @@ struct grid_data{
 
 };
 
+struct join_grid_data{
+    double x;
+    double y;
+    double Fi_j;
+
+    double arg;
+    double arg1;
+    double arg2;
+
+    double dx;
+    double dy;
+
+    double val;
+};
+
+
 class GenGrid2D
 {
 
@@ -31,6 +48,9 @@ class GenGrid2D
 
         QVector<grid_data> rot_grid_pos;
         QVector<grid_data> stat_grid_pos;
+
+        QVector<join_grid_data> join_Ez_grid_pos;//для расчета поля ротора в статоре
+        QVector<join_grid_data> join_Hy_grid_pos;
 
         grid_parameters   stator_grid_par;
         grid_parameters   rotor_grid_par;
@@ -43,6 +63,7 @@ class GenGrid2D
         double dh_stat_arm;//длина отрезка сетки на один слой паза Статора
         double dh_stat_body;//расстояния от дна паза Статора до окружности stat_R_stop / на число отрезков сетки
         double dh_stat_air;
+        double dh_stat_ext;
 
         int grid_mark_size;
 
@@ -57,6 +78,7 @@ class GenGrid2D
         void Gen_Grid_Pos_rot          (GenGeom2D *G, double arg_beg);
         void Gen_Grid_Pos_stat         (GenGeom2D *G);
         void Gen_Grid_Vector_init      (GenGeom2D *G);
+        void Gen_Grid_Pos_join         (GenGeom2D *G, double arg_beg);
 };
 
 #endif // ComGrid_H

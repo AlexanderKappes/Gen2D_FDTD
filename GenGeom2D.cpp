@@ -25,6 +25,9 @@ GenGeom2D::GenGeom2D()
     stat_par.h_wedge    =0.025;
     stat_par.b_slot     =0.031;
     stat_par.h_slot     =0.195;
+
+    stat_par.R_ext      = stat_par.R_out * 2;
+
     //stat_par.num_pole_stator_slots = 25;
 // */
 /*

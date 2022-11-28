@@ -10,6 +10,7 @@ GenGrid2D::GenGrid2D()
     stator_grid_par.n_level_arm     =1;
     stator_grid_par.n_level_body    =1;
     stator_grid_par.n_level_air     =1;
+    stator_grid_par.n_level_ext     =1;
 
     grid_mark_size                  =7;
 
@@ -30,6 +31,7 @@ GenGrid2D::GenGrid2D()
     stator_grid_par.M_a   = 8;
     stator_grid_par.M_b   = 16;
     stator_grid_par.M_air = 6;
+    stator_grid_par.M_ext = 6;
 
 }
 
@@ -41,16 +43,38 @@ grid_data set_grid_data(double x_in,    double y_in,    int sector_in, int point
     val.sector      = sector_in;
     val.point_num   = point_num_in;
 
-    val.EH           = EH_in;
+    val.EH          = EH_in;
 
     val.material    = material_in;
 
     val.source      = source_in;
 
-    val.EHnumX           = EHnumX_in;
-    val.EHnumY           = EHnumY_in;
+    val.EHnumX      = EHnumX_in;
+    val.EHnumY      = EHnumY_in;
 
     return val;
+}
+
+join_grid_data set_join_grid_data(double x_in,    double y_in,    double Fi_j_in)
+{
+    join_grid_data valG;
+
+    valG.x           = x_in;
+    valG.y           = y_in;
+    valG.Fi_j        = Fi_j_in;
+
+    return valG;
+}
+
+join_grid_data set_join_grid_arg(double arg_in,    double arg1_in,    double arg2_in)
+{
+    join_grid_data valG;
+
+    valG.arg    = arg_in;
+    valG.arg1   = arg1_in;
+    valG.arg2   = arg2_in;
+
+    return valG;
 }
 
 void GenGrid2D ::Gen_Grid_Vector_init    (GenGeom2D *G)
@@ -65,7 +89,7 @@ void GenGrid2D ::Gen_Grid_Vector_init    (GenGeom2D *G)
 
     stator_grid_par.n_level         = stator_grid_par.n_level_wedge
                                     + stator_grid_par.n_level_arm * stator_grid_par.num_arm_layer
-                                    + stator_grid_par.n_level_body + stator_grid_par.n_level_air;
+                                    + stator_grid_par.n_level_body + stator_grid_par.n_level_air + stator_grid_par.n_level_ext;
 
     rotor_grid_par.Row              =(rotor_grid_par.M_w * rotor_grid_par.n_level_wedge
                                     + rotor_grid_par.M_a * rotor_grid_par.n_level_arm * rotor_grid_par.num_arm_layer
@@ -82,7 +106,8 @@ void GenGrid2D ::Gen_Grid_Vector_init    (GenGeom2D *G)
     stator_grid_par.Row             =(stator_grid_par.M_w   * stator_grid_par.n_level_wedge
                                     + stator_grid_par.M_a   * stator_grid_par.n_level_arm * stator_grid_par.num_arm_layer
                                     + stator_grid_par.M_b   * stator_grid_par.n_level_body
-                                    + stator_grid_par.M_air * stator_grid_par.n_level_air);
+                                    + stator_grid_par.M_air * stator_grid_par.n_level_air
+                                    + stator_grid_par.M_ext * stator_grid_par.n_level_ext);
 
     stator_grid_par.Num_slot        = stator_grid_par.Np_s * stator_grid_par.Row;
     stator_grid_par.Num_pin         = stator_grid_par.Np_p * stator_grid_par.Row;
@@ -146,8 +171,9 @@ void GenGrid2D ::Gen_Grid_Calc(GenGeom2D *G)
     }
 
     //===========================================================================================
+    G->stat_par.R_ext               = G->stat_par.R_out + stator_grid_par.M_ext*(G->stat_par.R_out - G->stat_par.R_in - G->stat_par.h_wedge - G->stat_par.h_slot)/(stator_grid_par.n_level_body * stator_grid_par.M_b);
     stator_grid_par.R_start         = G->rot_par.R;
-    stator_grid_par.R_stop          = G->stat_par.R_out;
+    stator_grid_par.R_stop          = G->stat_par.R_ext;
 
     //1 - воздух, 2 - клин, 3 - обмотка, 4 - сталь поперек
     //5 - сталь вдоль, 4 - сталь поперек
@@ -156,8 +182,9 @@ void GenGrid2D ::Gen_Grid_Calc(GenGeom2D *G)
 
     dh_stat_wedge                   = G->stat_par.h_wedge/stator_grid_par.n_level_wedge;
     dh_stat_arm                     = G->stat_par.h_arm  /stator_grid_par.n_level_arm;
-    dh_stat_body                    = (stator_grid_par.R_stop - G->stat_par.R_in - G->stat_par.h_wedge - G->stat_par.h_slot)/stator_grid_par.n_level_body;
+    dh_stat_body                    = (G->stat_par.R_out - G->stat_par.R_in - G->stat_par.h_wedge - G->stat_par.h_slot)/stator_grid_par.n_level_body;
     dh_stat_air                     = G->air_gap/stator_grid_par.n_level_air;
+    dh_stat_ext                     = (stator_grid_par.R_stop - G->stat_par.R_out)/stator_grid_par.n_level_ext;
 
     //n_level = n_level_wedge + n_level_arm * num_arm_layer + n_level_body = 1 + 1*2 + 3 = 6
     // Массив отрезков между внутренней окружностью статора и дном сетки
@@ -169,23 +196,29 @@ void GenGrid2D ::Gen_Grid_Calc(GenGeom2D *G)
                 stat_mater_slot[i]  = 1;
                 stat_mater_pin[i]   = 1;
             }
-        else if(i    < stator_grid_par.n_level_wedge + stator_grid_par.n_level_air)
+        else if(i    < (stator_grid_par.n_level_wedge + stator_grid_par.n_level_air))
             {
                 stator_grid_par.dh_level[i]= dh_stat_wedge;
                 stat_mater_slot[i]  = 2;
                 stat_mater_pin[i]   = 5;
             }
-        else if(i    < stator_grid_par.n_level_air + stator_grid_par.n_level_wedge + stator_grid_par.n_level_arm*stator_grid_par.num_arm_layer)
+        else if(i    < (stator_grid_par.n_level_air + stator_grid_par.n_level_wedge + stator_grid_par.n_level_arm*stator_grid_par.num_arm_layer))
             {
                 stator_grid_par.dh_level[i]= dh_stat_arm;
                 stat_mater_slot[i]  = 3;
                 stat_mater_pin[i]   = 5;
             }
-        else
+        else if(i    < (stator_grid_par.n_level_air + stator_grid_par.n_level_wedge + stator_grid_par.n_level_arm*stator_grid_par.num_arm_layer+stator_grid_par.n_level_body))
             {
                 stator_grid_par.dh_level[i]= dh_stat_body;
                 stat_mater_slot[i]  = 4;
                 stat_mater_pin[i]   = 4;
+            }
+        else
+            {
+                stator_grid_par.dh_level[i]= dh_stat_ext;
+                stat_mater_slot[i]  = 1;
+                stat_mater_pin[i]   = 1;
             }
     }
 }
@@ -201,6 +234,7 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
     int id = 0;
     bool slot_work = false;
 
+
     for(int pole=0;pole<G->rot_par.n_pole;pole++)//Цикл по колличеству полюсов
         {
             int pole_coil_slot_cnt=G->rot_par.n_coil_slot_pole;
@@ -213,7 +247,8 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
 
                 double x[rotor_grid_par.Nmax];
                 double y[rotor_grid_par.Nmax];
-                double arg[rotor_grid_par.Nmax];
+                 double arg[rotor_grid_par.Nmax];
+
                 double v_abs;
                 int slot_idx = pole*G->rot_par.n_slot_pin_pole+slot;
                 double slot_start_arg = slot_idx*(G->rot_par.slot_arg+G->rot_par.pin_arg) + arg_beg;// Номер паза * на угол Паза + Угол Зубца
@@ -225,14 +260,14 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
                         id = 0;
                     if (i < rotor_grid_par.Np_s)
                     {
-                        //arg[i] = slot_start_arg +G->rot_par.slot_arg*(double)(id)/(double)(Np_r_s);
+                        arg[i] = slot_start_arg +G->rot_par.slot_arg*(double)(id)/(double)(rotor_grid_par.Np_s);
                         x[i]=qCos(slot_start_arg +G->rot_par.slot_arg*(double) id/(double) rotor_grid_par.Np_s);
                         y[i]=qSin(slot_start_arg +G->rot_par.slot_arg*(double) id/(double) rotor_grid_par.Np_s);
                         id ++;
                     }
                     else
                     {
-                        //arg[i] = slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double)(id)/(double)(Np_r_p);
+                        arg[i] = slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double)(id)/(double)(rotor_grid_par.Np_p);
                         x[i]=qCos(slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double) id/(double) rotor_grid_par.Np_p);
                         y[i]=qSin(slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double) id/(double) rotor_grid_par.Np_p);
                         id ++;
@@ -294,6 +329,21 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
                                 double val = v_abs + rotor_grid_par.dh_level[lev]   *   (double)(i)/(double)(rotor_grid_par.M_w);
                                 rot_grid_pos.push_back(set_grid_data(x[ray]*val, y[ray]*val, slot_idx, point_num, EH, material, false, 0.0, 0.0));
                                 point_num ++;
+                                //Определение точек соединения сеток по Ez
+                                if (ray % 2 == 0 && (i + 1) == rotor_grid_par.M_w)
+                                    {
+                                        double Fi_j =0.0;
+                                        if (i < rotor_grid_par.Np_s)
+                                        {
+                                            Fi_j = slot_start_arg + G->rot_par.slot_arg*(double) ray/(double) rotor_grid_par.Np_s;
+                                        }
+                                        else
+                                        {
+                                            Fi_j = slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double) ray/(double) rotor_grid_par.Np_p;
+                                        }
+                                        double val_j = v_abs + rotor_grid_par.dh_level[lev]   *   (double)(i+1)/(double)(rotor_grid_par.M_w);
+                                        join_Ez_grid_pos.push_back(set_join_grid_data(x[ray]*val_j, y[ray]*val_j,    Fi_j*180/M_PI));
+                                    }
                             }
                         }
                         v_abs += rotor_grid_par.dh_level[lev];
@@ -301,8 +351,6 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
                 }
            }
     }
-
-
 
     int M = rotor_grid_par.Row;
     int N = rotor_grid_par.Col;
@@ -390,6 +438,7 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
     int material = 0;
     int id = 0;
 
+    int id_j = 0;
 
     for(int pole=0;pole<G->stat_par.n_pole;pole++)//pole circle
     {
@@ -448,6 +497,29 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
                                 double val = v_abs + stator_grid_par.dh_level[lev]   *   (double)(i)/(double)(stator_grid_par.M_air);
                                 stat_grid_pos.push_back(set_grid_data(x[ray]*val, y[ray]*val, slot_idx, point_num, EH, material, false, 0.0, 0.0));
                                 point_num ++;
+
+                                //Определение точек соединения сеток по Hy
+                                if (ray % 2 == 0 && lev == 0 && i == 0)
+                                    {
+                                        double Fi_j =0.0;
+
+                                        if (ray == stator_grid_par.Np_s)
+                                            id_j = 0;
+
+                                        if (ray < stator_grid_par.Np_s)
+                                        {
+                                            Fi_j = slot_start_arg + G->stat_par.slot_arg*(double) id_j/(double) stator_grid_par.Np_s;
+                                            id_j +=2;
+                                        }
+                                        else
+                                        {
+                                            Fi_j = slot_start_arg +G->stat_par.slot_arg + G->stat_par.pin_arg*(double) id_j/(double) stator_grid_par.Np_p;
+                                            id_j +=2;
+                                        }
+
+                                        double val_j = v_abs - dh_rot_wedge * 1.0/(double)(rotor_grid_par.M_w);
+                                        join_Hy_grid_pos.push_back(set_join_grid_data(x[ray]*val_j, y[ray]*val_j,    Fi_j*180/M_PI));
+                                    }
                             }
                         }
 
@@ -483,7 +555,7 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
                                 point_num ++;
                             }
                         }
-                        else
+                        else if(lev    < (stator_grid_par.n_level_air + stator_grid_par.n_level_wedge + stator_grid_par.n_level_arm*stator_grid_par.num_arm_layer+stator_grid_par.n_level_body))
                         {
                             for (int i = 0; i < stator_grid_par.M_b;i++)
                             {
@@ -497,9 +569,24 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
                                 point_num ++;
                             }
                         }
+                        else
+                        {
+                            for (int i = 0; i < stator_grid_par.M_ext;i++)
+                            {
+                                if      (((i+1)%2   != 0)   && ((ray+1)%2 != 0))    EH = 1;
+                                else if (((i+1)%2   == 0)   && ((ray+1)%2 != 0))    EH = 3;
+                                else if (((i+1)%2   != 0)   && (ray+1)%2  == 0)     EH = 2;
+                                else if (((i+1)%2   == 0)   && (ray+1)%2  == 0)     EH = 0;
+
+                                double val = v_abs + stator_grid_par.dh_level[lev]   *   (double)(i)/(double)(stator_grid_par.M_ext);
+                                stat_grid_pos.push_back(set_grid_data(x[ray]*val, y[ray]*val, slot_idx, point_num, EH, material, false, 0.0, 0.0));
+                                point_num ++;
+                            }
+                        }
                         v_abs += stator_grid_par.dh_level[lev];
                     }
                 }
+                id_j = 0;
             }
         }
     }
@@ -582,6 +669,148 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
     ArrOutText (strPath + "\\GenGrid\\Stator\\", "stat_mat", N, M, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 9);
 }
 
+void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
+{
+    bool pole_pair = false;
+    bool slot_work = false;
+
+    //ротор
+    int id_r = 0;
+    int ij_r = 0;
+    int EHrot = 0;
+
+    double Fi_1_r = 0.0;
+    double Fi_2_r = 0.0;
+    double Fi_j_r = 0.0;
+
+    double arg1_r = 0.0;
+    double arg2_r = 0.0;
+    double arg_r  = 0.0;
+
+    for(int pole=0;pole<G->rot_par.n_pole;pole++)//Цикл по колличеству полюсов
+        {
+            int pole_coil_slot_cnt=G->rot_par.n_coil_slot_pole;
+            pole_pair = !(pole_pair); //first pole of pole pair
+            //Цикл по числу рабочих пазов на один полюс (26 шагов)
+            for(int slot=0;slot<G->rot_par.n_slot_pin_pole;slot++,pole_coil_slot_cnt--)//slot circle
+            {
+                if(slot < G->rot_par.n_coil_slot/2) slot_work = true;
+
+                int slot_idx = pole*G->rot_par.n_slot_pin_pole+slot;
+                double slot_start_arg = slot_idx*(G->rot_par.slot_arg+G->rot_par.pin_arg) + arg_beg;// Номер паза * на угол Паза + Угол Зубца
+
+                //slot ray. Координаты середины паза pin ray. Координаты середины зубца
+                for (int i = 0; i < (rotor_grid_par.Np_s + rotor_grid_par.Np_p);i++)
+                {
+                    EHrot = rot_grid_pos[i*rotor_grid_par.Row].EH;
+                    if (i == rotor_grid_par.Np_s)
+                        id_r = 0;
+                    if (i < rotor_grid_par.Np_s)
+                    {
+                        if (EHrot == 1)
+                        {
+                            Fi_1_r = slot_start_arg +G->rot_par.slot_arg*(double) id_r/(double) rotor_grid_par.Np_s*180/M_PI;
+                            Fi_2_r = slot_start_arg +G->rot_par.slot_arg*(double) (id_r+2) /(double) rotor_grid_par.Np_s*180/M_PI;
+                        }
+                        id_r ++;
+                    }
+                    else
+                    {
+                        if (EHrot == 1)
+                        {
+                            Fi_1_r = slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double) id_r/(double) rotor_grid_par.Np_p*180/M_PI;
+                            Fi_2_r = slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double) (id_r + 2)/(double) rotor_grid_par.Np_p*180/M_PI;
+                        }
+
+                        id_r ++;
+                    }
+
+                    if (join_Hy_grid_pos[ij_r].Fi_j >= Fi_1_r && join_Hy_grid_pos[ij_r].Fi_j <= Fi_2_r && EHrot == 1 )
+                    {
+                        arg1_r = join_Hy_grid_pos[ij_r].Fi_j - Fi_1_r;
+                        arg2_r = Fi_2_r - join_Hy_grid_pos[ij_r].Fi_j;
+                        arg_r = Fi_2_r - Fi_1_r;
+
+                        join_Hy_grid_pos[ij_r].arg1 = arg1_r;
+                        join_Hy_grid_pos[ij_r].arg2 = arg2_r;
+                        join_Hy_grid_pos[ij_r].arg  = arg_r;
+
+                        ij_r++;
+                    }
+                }
+                id_r = 0;
+            }
+        }
+
+
+    //статор
+    int id_s = 0;
+    int ij_s = 0;
+    int EHstat = 0;
+
+    double Fi_1_s = 0.0;
+    double Fi_2_s = 0.0;
+    double Fi_j_s = 0.0;
+
+    double arg1_s = 0.0;
+    double arg2_s = 0.0;
+    double arg_s  = 0.0;
+
+    for(int pole=0;pole<G->stat_par.n_pole;pole++)//pole circle
+    {
+        for(int ph=0;ph<3;ph++)//phase circle
+        {
+            for(int slot=0; slot < G->stat_par.n_slot_pin_pole_ph; slot++)//pin circle
+            {
+                int     slot_idx        = pole * G->stat_par.n_slot_pin_pole_ph*3 + ph*G->stat_par.n_slot_pin_pole_ph + slot;
+                double  slot_start_arg  = slot_idx*(G->stat_par.slot_arg+G->stat_par.pin_arg);
+
+                for (int i = 0; i < (stator_grid_par.Np_s + stator_grid_par.Np_p) && (ij_s * 2) != rotor_grid_par.Col;i++)
+                    {
+                        EHstat = stat_grid_pos[i*stator_grid_par.Row].EH;
+
+                        if (i == stator_grid_par.Np_s)
+                            id_s = 0;
+                        if (i < stator_grid_par.Np_s)
+                        {
+                            if ( EHstat == 1)
+                            {
+                                Fi_1_s = (slot_start_arg +G->stat_par.slot_arg*(double) id_s/(double) stator_grid_par.Np_s)*180/M_PI;
+                                Fi_2_s = (slot_start_arg +G->stat_par.slot_arg*(double) (id_s+2) /(double) stator_grid_par.Np_s)*180/M_PI;
+                            }
+                            id_s ++;
+                        }
+                        else
+                        {
+                            if (EHstat == 1)
+                            {
+                                Fi_1_s = (slot_start_arg +G->stat_par.slot_arg + G->stat_par.pin_arg*(double) id_s/(double) stator_grid_par.Np_p)*180/M_PI;
+                                Fi_2_s = (slot_start_arg +G->stat_par.slot_arg + G->stat_par.pin_arg*(double) (id_s + 2)/(double) stator_grid_par.Np_p)*180/M_PI;
+                            }
+
+                            id_s ++;
+                        }
+
+                        if (join_Ez_grid_pos[ij_s].Fi_j >= Fi_1_s && join_Ez_grid_pos[ij_s].Fi_j <= Fi_2_s && EHstat == 1 )
+                        {
+                            arg1_s = join_Ez_grid_pos[ij_s].Fi_j - Fi_1_s;
+                            arg2_s = Fi_2_s - join_Ez_grid_pos[ij_s].Fi_j;
+                            arg_s = Fi_2_s - Fi_1_s;
+
+                            join_Ez_grid_pos[ij_s].arg1 = arg1_s;
+                            join_Ez_grid_pos[ij_s].arg2 = arg2_s;
+                            join_Ez_grid_pos[ij_s].arg  = arg_s;
+
+                            ij_s++;
+                        }
+                    }
+                id_s = 0;
+            }
+        }
+    }
+
+    int check = 0;
+}
 GenGrid2D::~GenGrid2D()
 {
 

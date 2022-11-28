@@ -46,6 +46,8 @@ struct stator_parameters
     double slot_arg;
     double pin_arg;
 
+    double R_ext;
+
     double b_slot;
     double h_slot;
 
