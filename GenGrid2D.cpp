@@ -674,7 +674,7 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
     bool pole_pair = false;
     bool slot_work = false;
 
-    //ротор
+    //Ротор Hy
     int id_r = 0;
     int ij_r = 0;
     int EHrot = 0;
@@ -700,50 +700,62 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
                 double slot_start_arg = slot_idx*(G->rot_par.slot_arg+G->rot_par.pin_arg) + arg_beg;// Номер паза * на угол Паза + Угол Зубца
 
                 //slot ray. Координаты середины паза pin ray. Координаты середины зубца
-                for (int i = 0; i < (rotor_grid_par.Np_s + rotor_grid_par.Np_p);i++)
+                while (id_r < rotor_grid_par.Np_s)
                 {
-                    EHrot = rot_grid_pos[i*rotor_grid_par.Row].EH;
-                    if (i == rotor_grid_par.Np_s)
-                        id_r = 0;
-                    if (i < rotor_grid_par.Np_s)
-                    {
-                        if (EHrot == 1)
+                    EHrot = rot_grid_pos[1+id_r*rotor_grid_par.Row].EH;
+
+                    Fi_1_r = (slot_start_arg +G->rot_par.slot_arg*(double) id_r/(double) rotor_grid_par.Np_s)*180/M_PI;
+                    id_r += 2;
+                    Fi_2_r = (slot_start_arg +G->rot_par.slot_arg*(double) (id_r) /(double) rotor_grid_par.Np_s)*180/M_PI;
+
+                    while (join_Hy_grid_pos[ij_r].Fi_j >= Fi_1_r && join_Hy_grid_pos[ij_r].Fi_j <= Fi_2_r && EHrot == 3 )
                         {
-                            Fi_1_r = slot_start_arg +G->rot_par.slot_arg*(double) id_r/(double) rotor_grid_par.Np_s*180/M_PI;
-                            Fi_2_r = slot_start_arg +G->rot_par.slot_arg*(double) (id_r+2) /(double) rotor_grid_par.Np_s*180/M_PI;
+
+                            arg1_r = join_Hy_grid_pos[ij_r].Fi_j - Fi_1_r;
+                            arg2_r = Fi_2_r - join_Hy_grid_pos[ij_r].Fi_j;
+                            arg_r = Fi_2_r - Fi_1_r;
+
+                            join_Hy_grid_pos[ij_r].arg1 = arg1_r;
+                            join_Hy_grid_pos[ij_r].arg2 = arg2_r;
+                            join_Hy_grid_pos[ij_r].arg  = arg_r;
+
+                            ij_r++;
+                            if ((ij_r * 2) == stator_grid_par.Col)
+                                break;
                         }
-                        id_r ++;
-                    }
-                    else
-                    {
-                        if (EHrot == 1)
+                }
+                id_r = 0;
+
+                while (id_r < rotor_grid_par.Np_p)
+                {
+                    EHrot = rot_grid_pos[1+id_r*rotor_grid_par.Row].EH;
+
+                    Fi_1_r = (slot_start_arg +G->rot_par.slot_arg+G->rot_par.pin_arg*(double) id_r/(double) rotor_grid_par.Np_s)*180/M_PI;
+                    id_r += 2;
+                    Fi_2_r = (slot_start_arg +G->rot_par.slot_arg+G->rot_par.pin_arg*(double) (id_r) /(double) rotor_grid_par.Np_s)*180/M_PI;
+
+                    while (join_Hy_grid_pos[ij_r].Fi_j >= Fi_1_r && join_Hy_grid_pos[ij_r].Fi_j <= Fi_2_r && EHrot == 3 )
                         {
-                            Fi_1_r = slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double) id_r/(double) rotor_grid_par.Np_p*180/M_PI;
-                            Fi_2_r = slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double) (id_r + 2)/(double) rotor_grid_par.Np_p*180/M_PI;
+
+                            arg1_r = join_Hy_grid_pos[ij_r].Fi_j - Fi_1_r;
+                            arg2_r = Fi_2_r - join_Hy_grid_pos[ij_r].Fi_j;
+                            arg_r = Fi_2_r - Fi_1_r;
+
+                            join_Hy_grid_pos[ij_r].arg1 = arg1_r;
+                            join_Hy_grid_pos[ij_r].arg2 = arg2_r;
+                            join_Hy_grid_pos[ij_r].arg  = arg_r;
+
+                            ij_r++;
+                            if ((ij_r * 2) == stator_grid_par.Col)
+                                break;
                         }
-
-                        id_r ++;
-                    }
-
-                    if (join_Hy_grid_pos[ij_r].Fi_j >= Fi_1_r && join_Hy_grid_pos[ij_r].Fi_j <= Fi_2_r && EHrot == 1 )
-                    {
-                        arg1_r = join_Hy_grid_pos[ij_r].Fi_j - Fi_1_r;
-                        arg2_r = Fi_2_r - join_Hy_grid_pos[ij_r].Fi_j;
-                        arg_r = Fi_2_r - Fi_1_r;
-
-                        join_Hy_grid_pos[ij_r].arg1 = arg1_r;
-                        join_Hy_grid_pos[ij_r].arg2 = arg2_r;
-                        join_Hy_grid_pos[ij_r].arg  = arg_r;
-
-                        ij_r++;
-                    }
                 }
                 id_r = 0;
             }
         }
 
 
-    //статор
+    //Статор Ez
     int id_s = 0;
     int ij_s = 0;
     int EHstat = 0;
