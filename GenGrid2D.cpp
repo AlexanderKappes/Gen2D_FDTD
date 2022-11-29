@@ -351,83 +351,6 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
                 }
            }
     }
-
-    int M = rotor_grid_par.Row;
-    int N = rotor_grid_par.Col;
-    double y_dy = 0, x_dy = 0;
-    double y_dx = 0, x_dx = 0;
-    double EZnumX = 0.0;
-    double EZnumY = 0.0;
-    double HXnumX = 0.0;
-    double HXnumY = 0.5;
-    double HYnumX = 0.5;
-    double HYnumY = 0.0;
-
-    for (int i = 0; i < N; i++)
-    {
-        for (int j = 0; j < M; j++)
-            {
-                if (j < (M - 2))//Расчет расстояний между точками
-                {
-                    x_dx = rot_grid_pos[j + i*M].x - rot_grid_pos[j + 2 + i*M].x;
-                    y_dx = rot_grid_pos[j + i*M].y - rot_grid_pos[j + 2 + i*M].y;
-
-                    if (i  < (N - 2))
-                      {
-                        x_dy = rot_grid_pos[j + i*M].x - rot_grid_pos[j + i*M + 2*M].x;
-                        y_dy = rot_grid_pos[j + i*M].y - rot_grid_pos[j + i*M + 2*M].y;
-                      }
-                    else
-                    {
-                        x_dy = rot_grid_pos[j + i*M].x - rot_grid_pos[j + (i - N + 2)*M].x;
-                        y_dy = rot_grid_pos[j + i*M].y - rot_grid_pos[j + (i - N + 2)*M].y;
-                    }
-
-                    rot_dy[j + i*M] = sqrt (x_dy * x_dy + y_dy * y_dy);
-                    rot_dx[j + i*M] = sqrt (x_dx * x_dx + y_dx * y_dx);
-                }
-
-                if (rot_grid_pos[j + i*M].EH == 1)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
-                {
-                    rot_grid_pos[j + i*M].EHnumX = EZnumX;
-                    rot_grid_pos[j + i*M].EHnumY = EZnumY;
-                    EZnumY++;
-                }
-                if (rot_grid_pos[j + i*M].EH == 2)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
-                {
-                    rot_grid_pos[j + i*M].EHnumX = HXnumX;
-                    rot_grid_pos[j + i*M].EHnumY = HXnumY;
-                    HXnumY++;
-                }
-                if (rot_grid_pos[j + i*M].EH == 3)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
-                {
-                    rot_grid_pos[j + i*M].EHnumX = HYnumX;
-                    rot_grid_pos[j + i*M].EHnumY = HYnumY;
-                    HYnumY++;
-                }
-
-            }
-        EZnumY = 0;
-        HXnumY = 0.5;
-        HYnumY = 0;
-        if ((i+1)%2 == 0)
-        {
-            EZnumX++;
-            HXnumX++;
-            HYnumX++;
-        }
-    }
-
-    std::string strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\";
-    ArrOutText (strPath + "\\GenGrid\\Rotor\\", "rot_mat", N, M, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 1);
-    ArrOutText (strPath + "\\GenGrid\\Rotor\\", "rot_mat", N, M, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 2);
-    ArrOutText (strPath + "\\GenGrid\\Rotor\\", "rot_mat", N, M, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 3);
-    ArrOutText (strPath + "\\GenGrid\\Rotor\\", "rot_mat", N, M, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 4);
-    ArrOutText (strPath + "\\GenGrid\\Rotor\\", "rot_mat", N, M, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 5);
-    ArrOutText (strPath + "\\GenGrid\\Rotor\\", "rot_mat", N, M, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 6);
-    ArrOutText (strPath + "\\GenGrid\\Rotor\\", "rot_mat", N, M, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 7);
-    ArrOutText (strPath + "\\GenGrid\\Rotor\\", "rot_mat", N, M, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 8);
-    ArrOutText (strPath + "\\GenGrid\\Rotor\\", "rot_mat", N, M, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 9);
 }
 
 //Формирование вектора точек сетки статора
@@ -590,83 +513,6 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
             }
         }
     }
-
-    int M = stator_grid_par.Row;
-    int N = stator_grid_par.Col;
-    double y_dy = 0, x_dy = 0;
-    double y_dx = 0, x_dx = 0;
-    double EZnumX = 0.0;
-    double EZnumY = 0.0;
-    double HXnumX = 0.0;
-    double HXnumY = 0.5;
-    double HYnumX = 0.5;
-    double HYnumY = 0.0;
-
-    for (int i = 0; i < N; i++)
-    {
-        for (int j = 0; j < M; j++)
-            {
-                if (j < (M - 2))//Расчет расстояний между точками
-                {
-                    x_dx = stat_grid_pos[j + i*M].x - stat_grid_pos[j + 2 + i*M].x;
-                    y_dx = stat_grid_pos[j + i*M].y - stat_grid_pos[j + 2 + i*M].y;
-
-                    if (i  < (N - 2))
-                      {
-                        x_dy = stat_grid_pos[j + i*M].x - stat_grid_pos[j + i*M + 2*M].x;
-                        y_dy = stat_grid_pos[j + i*M].y - stat_grid_pos[j + i*M + 2*M].y;
-                      }
-                    else
-                    {
-                        x_dy = stat_grid_pos[j + i*M].x - stat_grid_pos[j + (i - N + 2)*M].x;
-                        y_dy = stat_grid_pos[j + i*M].y - stat_grid_pos[j + (i - N + 2)*M].y;
-                    }
-
-                    stat_dy[j + i*M] = sqrt (x_dy * x_dy + y_dy * y_dy);
-                    stat_dx[j + i*M] = sqrt (x_dx * x_dx + y_dx * y_dx);
-                }
-
-                if (stat_grid_pos[j + i*M].EH == 1)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
-                {
-                    stat_grid_pos[j + i*M].EHnumX = EZnumX;
-                    stat_grid_pos[j + i*M].EHnumY = EZnumY;
-                    EZnumY++;
-                }
-                if (stat_grid_pos[j + i*M].EH == 2)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
-                {
-                    stat_grid_pos[j + i*M].EHnumX = HXnumX;
-                    stat_grid_pos[j + i*M].EHnumY = HXnumY;
-                    HXnumY++;
-                }
-                if (stat_grid_pos[j + i*M].EH == 3)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
-                {
-                    stat_grid_pos[j + i*M].EHnumX = HYnumX;
-                    stat_grid_pos[j + i*M].EHnumY = HYnumY;
-                    HYnumY++;
-                }
-
-            }
-        EZnumY = 0;
-        HXnumY = 0.5;
-        HYnumY = 0;
-        if ((i+1)%2 == 0)
-        {
-            EZnumX++;
-            HXnumX++;
-            HYnumX++;
-        }
-    }
-
-    std::string strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\";
-    ArrOutText (strPath + "\\GenGrid\\Stator\\", "stat_mat", N, M, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 1);
-    ArrOutText (strPath + "\\GenGrid\\Stator\\", "stat_mat", N, M, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 2);
-    ArrOutText (strPath + "\\GenGrid\\Stator\\", "stat_mat", N, M, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 3);
-    ArrOutText (strPath + "\\GenGrid\\Stator\\", "stat_mat", N, M, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 4);
-    ArrOutText (strPath + "\\GenGrid\\Stator\\", "stat_mat", N, M, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 5);
-    ArrOutText (strPath + "\\GenGrid\\Stator\\", "stat_mat", N, M, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 6);
-    ArrOutText (strPath + "\\GenGrid\\Stator\\", "stat_mat", N, M, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 7);
-    ArrOutText (strPath + "\\GenGrid\\Stator\\", "stat_mat", N, M, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 8);
-    ArrOutText (strPath + "\\GenGrid\\Stator\\", "stat_mat", N, M, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 9);
 }
 
 void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
@@ -823,6 +669,174 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
 
     int check = 0;
 }
+
+void GenGrid2D ::IntervalsCalc()
+{
+    int M_r = rotor_grid_par.Row;
+    int N_r = rotor_grid_par.Col;
+    double y_dy_r = 0, x_dy_r = 0;
+    double y_dx_r = 0, x_dx_r = 0;
+    double EZnumX_r = 0.0;
+    double EZnumY_r = 0.0;
+    double HXnumX_r = 0.0;
+    double HXnumY_r = 0.5;
+    double HYnumX_r = 0.5;
+    double HYnumY_r = 0.0;
+
+    for (int i = 0; i < N_r; i++)
+    {
+        for (int j = 0; j < M_r; j++)
+            {
+                if (j < (M_r - 2))//Расчет расстояний между точками
+                {
+                    x_dx_r = rot_grid_pos[j + i*M_r].x - rot_grid_pos[j + 2 + i*M_r].x;
+                    y_dx_r = rot_grid_pos[j + i*M_r].y - rot_grid_pos[j + 2 + i*M_r].y;
+
+                    if (i  < (N_r - 2))
+                      {
+                        x_dy_r = rot_grid_pos[j + i*M_r].x - rot_grid_pos[j + i*M_r + 2*M_r].x;
+                        y_dy_r = rot_grid_pos[j + i*M_r].y - rot_grid_pos[j + i*M_r + 2*M_r].y;
+                      }
+                    else
+                    {
+                        x_dy_r = rot_grid_pos[j + i*M_r].x - rot_grid_pos[j + (i - N_r + 2)*M_r].x;
+                        y_dy_r = rot_grid_pos[j + i*M_r].y - rot_grid_pos[j + (i - N_r + 2)*M_r].y;
+                    }
+
+                    rot_dy[j + i*M_r] = sqrt (x_dy_r * x_dy_r + y_dy_r * y_dy_r);
+                    rot_dx[j + i*M_r] = sqrt (x_dx_r * x_dx_r + y_dx_r * y_dx_r);
+                }
+
+                if (rot_grid_pos[j + i*M_r].EH == 1)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
+                {
+                    rot_grid_pos[j + i*M_r].EHnumX = EZnumX_r;
+                    rot_grid_pos[j + i*M_r].EHnumY = EZnumY_r;
+                    EZnumY_r++;
+                }
+                if (rot_grid_pos[j + i*M_r].EH == 2)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
+                {
+                    rot_grid_pos[j + i*M_r].EHnumX = HXnumX_r;
+                    rot_grid_pos[j + i*M_r].EHnumY = HXnumY_r;
+                    HXnumY_r++;
+                }
+                if (rot_grid_pos[j + i*M_r].EH == 3)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
+                {
+                    rot_grid_pos[j + i*M_r].EHnumX = HYnumX_r;
+                    rot_grid_pos[j + i*M_r].EHnumY = HYnumY_r;
+                    HYnumY_r++;
+                }
+
+            }
+        EZnumY_r = 0;
+        HXnumY_r = 0.5;
+        HYnumY_r = 0;
+        if ((i+1)%2 == 0)
+        {
+            EZnumX_r++;
+            HXnumX_r++;
+            HYnumX_r++;
+        }
+    }
+
+    int M_s = stator_grid_par.Row;
+    int N_s = stator_grid_par.Col;
+    double y_dy_s = 0, x_dy_s = 0;
+    double y_dx_s = 0, x_dx_s = 0;
+    double EZnumX_s = 0.0;
+    double EZnumY_s = 0.0;
+    double HXnumX_s = 0.0;
+    double HXnumY_s = 0.5;
+    double HYnumX_s = 0.5;
+    double HYnumY_s = 0.0;
+
+    for (int i = 0; i < N_s; i++)
+    {
+        for (int j = 0; j < M_s; j++)
+            {
+                if (j < (M_s - 2))//Расчет расстояний между точками
+                {
+                    x_dx_s = stat_grid_pos[j + i*M_s].x - stat_grid_pos[j + 2 + i*M_s].x;
+                    y_dx_s = stat_grid_pos[j + i*M_s].y - stat_grid_pos[j + 2 + i*M_s].y;
+
+                    if (i  < (N_s - 2))
+                      {
+                        x_dy_s = stat_grid_pos[j + i*M_s].x - stat_grid_pos[j + i*M_s + 2*M_s].x;
+                        y_dy_s = stat_grid_pos[j + i*M_s].y - stat_grid_pos[j + i*M_s + 2*M_s].y;
+                      }
+                    else
+                    {
+                        x_dy_s = stat_grid_pos[j + i*M_s].x - stat_grid_pos[j + (i - N_s + 2)*M_s].x;
+                        y_dy_s = stat_grid_pos[j + i*M_s].y - stat_grid_pos[j + (i - N_s + 2)*M_s].y;
+                    }
+
+                    stat_dy[j + i*M_s] = sqrt (x_dy_s * x_dy_s + y_dy_s * y_dy_s);
+                    stat_dx[j + i*M_s] = sqrt (x_dx_s * x_dx_s + y_dx_s * y_dx_s);
+                }
+
+                if (stat_grid_pos[j + i*M_s].EH == 1)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
+                {
+                    stat_grid_pos[j + i*M_s].EHnumX = EZnumX_s;
+                    stat_grid_pos[j + i*M_s].EHnumY = EZnumY_s;
+                    EZnumY_s++;
+                }
+                if (stat_grid_pos[j + i*M_s].EH == 2)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
+                {
+                    stat_grid_pos[j + i*M_s].EHnumX = HXnumX_s;
+                    stat_grid_pos[j + i*M_s].EHnumY = HXnumY_s;
+                    HXnumY_s++;
+                }
+                if (stat_grid_pos[j + i*M_s].EH == 3)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
+                {
+                    stat_grid_pos[j + i*M_s].EHnumX = HYnumX_s;
+                    stat_grid_pos[j + i*M_s].EHnumY = HYnumY_s;
+                    HYnumY_s++;
+                }
+
+            }
+        EZnumY_s = 0;
+        HXnumY_s = 0.5;
+        HYnumY_s = 0;
+        if ((i+1)%2 == 0)
+        {
+            EZnumX_s++;
+            HXnumX_s++;
+            HYnumX_s++;
+        }
+    }
+}
+
+
+void GenGrid2D ::DataOut()
+{
+    int M_r = rotor_grid_par.Row;
+    int N_r = rotor_grid_par.Col;
+
+    std::string strPath_r = "D:\\work\\Gen2D_FDTD\\TextFiles\\";
+    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 1);
+    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 2);
+    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 3);
+    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 4);
+    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 5);
+    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 6);
+    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 7);
+    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 8);
+    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 9);
+
+    int M_s = stator_grid_par.Row;
+    int N_s = stator_grid_par.Col;
+
+    std::string strPath_s = "D:\\work\\Gen2D_FDTD\\TextFiles\\";
+    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 1);
+    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 2);
+    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 3);
+    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 4);
+    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 5);
+    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 6);
+    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 7);
+    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 8);
+    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 9);
+}
+
 GenGrid2D::~GenGrid2D()
 {
 

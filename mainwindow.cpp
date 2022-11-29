@@ -20,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     GenGrid.Gen_Grid_Pos_join(&GenGeom, arg_beg);
 
+    GenGrid.IntervalsCalc();
+    GenGrid.DataOut();
+
     Mat.Materials_array(&GenGrid, true);
     Mat.Materials_array(&GenGrid, false);
 
@@ -291,6 +294,9 @@ void MainWindow::on_pushButton_clicked()
     GenGrid.Gen_Grid_Pos_rot(&GenGeom, arg_beg);
     GenGrid.Gen_Grid_Pos_stat(&GenGeom);
     GenGrid.Gen_Grid_Pos_join(&GenGeom, arg_beg);
+
+    GenGrid.IntervalsCalc();
+    GenGrid.DataOut();
 
     GenGraph.GenGraphCurveSize (&GenGeom);
 

@@ -79,6 +79,8 @@ class GenGrid2D
         void Gen_Grid_Pos_stat         (GenGeom2D *G);
         void Gen_Grid_Vector_init      (GenGeom2D *G);
         void Gen_Grid_Pos_join         (GenGeom2D *G, double arg_beg);
+        void IntervalsCalc();
+        void DataOut();
 };
 
 #endif // ComGrid_H
