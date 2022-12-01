@@ -55,13 +55,21 @@ grid_data set_grid_data(double x_in,    double y_in,    int sector_in, int point
     return val;
 }
 
-join_grid_data set_join_grid_data(double x_in,    double y_in,    double Fi_j_in)
+join_grid_data set_join_grid_data(double x_in,    double y_in,    double Fi_j_in, double arg_in, double arg1_in, double arg2_in, double dx_in, double dy_in, double val_in)
 {
     join_grid_data valG;
 
     valG.x           = x_in;
     valG.y           = y_in;
     valG.Fi_j        = Fi_j_in;
+
+    valG.arg         = arg_in;
+    valG.arg1        = arg1_in;
+    valG.arg2        = arg2_in;
+
+    valG.dx           = dx_in;
+    valG.dy           = dy_in;
+    valG.val          = val_in;
 
     return valG;
 }
@@ -247,7 +255,7 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
 
                 double x[rotor_grid_par.Nmax];
                 double y[rotor_grid_par.Nmax];
-                 double arg[rotor_grid_par.Nmax];
+                //double arg[rotor_grid_par.Nmax];
 
                 double v_abs;
                 int slot_idx = pole*G->rot_par.n_slot_pin_pole+slot;
@@ -260,14 +268,14 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
                         id = 0;
                     if (i < rotor_grid_par.Np_s)
                     {
-                        arg[i] = slot_start_arg +G->rot_par.slot_arg*(double)(id)/(double)(rotor_grid_par.Np_s);
+                        //arg[i] = slot_start_arg +G->rot_par.slot_arg*(double)(id)/(double)(rotor_grid_par.Np_s);
                         x[i]=qCos(slot_start_arg +G->rot_par.slot_arg*(double) id/(double) rotor_grid_par.Np_s);
                         y[i]=qSin(slot_start_arg +G->rot_par.slot_arg*(double) id/(double) rotor_grid_par.Np_s);
                         id ++;
                     }
                     else
                     {
-                        arg[i] = slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double)(id)/(double)(rotor_grid_par.Np_p);
+                        //arg[i] = slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double)(id)/(double)(rotor_grid_par.Np_p);
                         x[i]=qCos(slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double) id/(double) rotor_grid_par.Np_p);
                         y[i]=qSin(slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double) id/(double) rotor_grid_par.Np_p);
                         id ++;
@@ -342,7 +350,7 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
                                             Fi_j = slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double) ray/(double) rotor_grid_par.Np_p;
                                         }
                                         double val_j = v_abs + rotor_grid_par.dh_level[lev]   *   (double)(i+1)/(double)(rotor_grid_par.M_w);
-                                        join_Ez_grid_pos.push_back(set_join_grid_data(x[ray]*val_j, y[ray]*val_j,    Fi_j*180/M_PI));
+                                        join_Ez_grid_pos.push_back(set_join_grid_data(x[ray]*val_j, y[ray]*val_j,    Fi_j*180/M_PI, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
                                     }
                             }
                         }
@@ -441,7 +449,8 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
                                         }
 
                                         double val_j = v_abs - dh_rot_wedge * 1.0/(double)(rotor_grid_par.M_w);
-                                        join_Hy_grid_pos.push_back(set_join_grid_data(x[ray]*val_j, y[ray]*val_j,    Fi_j*180/M_PI));
+                                        join_Hy_grid_pos.push_back(set_join_grid_data(x[ray]*val_j, y[ray]*val_j,    Fi_j*180/M_PI, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
+
                                     }
                             }
                         }
@@ -518,7 +527,7 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
 void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
 {
     bool pole_pair = false;
-    bool slot_work = false;
+    //bool slot_work = false;
 
     //Ротор Hy
     int id_r = 0;
@@ -527,7 +536,6 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
 
     double Fi_1_r = 0.0;
     double Fi_2_r = 0.0;
-    double Fi_j_r = 0.0;
 
     double arg1_r = 0.0;
     double arg2_r = 0.0;
@@ -540,7 +548,7 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
             //Цикл по числу рабочих пазов на один полюс (26 шагов)
             for(int slot=0;slot<G->rot_par.n_slot_pin_pole;slot++,pole_coil_slot_cnt--)//slot circle
             {
-                if(slot < G->rot_par.n_coil_slot/2) slot_work = true;
+                //if(slot < G->rot_par.n_coil_slot/2) slot_work = true;
 
                 int slot_idx = pole*G->rot_par.n_slot_pin_pole+slot;
                 double slot_start_arg = slot_idx*(G->rot_par.slot_arg+G->rot_par.pin_arg) + arg_beg;// Номер паза * на угол Паза + Угол Зубца
@@ -608,7 +616,6 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
 
     double Fi_1_s = 0.0;
     double Fi_2_s = 0.0;
-    double Fi_j_s = 0.0;
 
     double arg1_s = 0.0;
     double arg2_s = 0.0;
@@ -666,8 +673,6 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
             }
         }
     }
-
-    int check = 0;
 }
 
 void GenGrid2D ::IntervalsCalc()
@@ -793,6 +798,7 @@ void GenGrid2D ::IntervalsCalc()
                 }
 
             }
+
         EZnumY_s = 0;
         HXnumY_s = 0.5;
         HYnumY_s = 0;
@@ -803,6 +809,30 @@ void GenGrid2D ::IntervalsCalc()
             HYnumX_s++;
         }
     }
+
+    int M_Ej = rotor_grid_par.Row;
+    int N_Ej = rotor_grid_par.Col/2;
+    //double y_dy_Ej = 0, x_dy_Ej = 0;
+    double y_dx_Ej = 0, x_dx_Ej = 0;
+
+    for (int i = 0; i < N_Ej; i++)
+    {
+                x_dx_Ej = rot_grid_pos[M_Ej*(2*i+1) - 2].x - join_Ez_grid_pos   [i].x ;
+                y_dx_Ej = rot_grid_pos[M_Ej*(2*i+1) - 2].y - join_Ez_grid_pos   [i].y;
+                join_Ez_grid_pos      [i].dx = sqrt (x_dx_Ej * x_dx_Ej + y_dx_Ej * y_dx_Ej);
+    }
+
+    int M_Hj = stator_grid_par.Row;
+    int N_Hj = stator_grid_par.Col/2;
+    //double y_dy_Hj = 0, x_dy_Hj = 0;
+    double y_dx_Hj = 0, x_dx_Hj = 0;
+
+    for (int i = 0; i < N_Hj; i++)
+    {
+                x_dx_Hj = stat_grid_pos[1 + i*M_Hj*2].x - join_Hy_grid_pos   [i].x;
+                y_dx_Hj = stat_grid_pos[1 + i*M_Hj*2].y - join_Hy_grid_pos   [i].y;
+                join_Hy_grid_pos             [i].dx = sqrt (x_dx_Hj * x_dx_Hj + y_dx_Hj * y_dx_Hj);
+    }
 }
 
 
@@ -812,29 +842,35 @@ void GenGrid2D ::DataOut()
     int N_r = rotor_grid_par.Col;
 
     std::string strPath_r = "D:\\work\\Gen2D_FDTD\\TextFiles\\";
-    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 1);
-    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 2);
-    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 3);
-    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 4);
-    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 5);
-    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 6);
-    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 7);
-    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 8);
-    ArrOutText (strPath_r + "\\GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 9);
+    ArrOutText (strPath_r + "GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 1);
+    ArrOutText (strPath_r + "GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 2);
+    ArrOutText (strPath_r + "GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 3);
+    ArrOutText (strPath_r + "GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 4);
+    ArrOutText (strPath_r + "GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 5);
+    ArrOutText (strPath_r + "GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 6);
+    ArrOutText (strPath_r + "GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 7);
+    ArrOutText (strPath_r + "GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 8);
+    ArrOutText (strPath_r + "GenGrid\\Rotor\\", "rot_mat", N_r, M_r, rotor_grid_par.Np_s,  rotor_grid_par.Np_p, rot_grid_pos, 9);
 
     int M_s = stator_grid_par.Row;
     int N_s = stator_grid_par.Col;
 
     std::string strPath_s = "D:\\work\\Gen2D_FDTD\\TextFiles\\";
-    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 1);
-    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 2);
-    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 3);
-    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 4);
-    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 5);
-    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 6);
-    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 7);
-    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 8);
-    ArrOutText (strPath_s + "\\GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 9);
+    ArrOutText (strPath_s + "GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 1);
+    ArrOutText (strPath_s + "GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 2);
+    ArrOutText (strPath_s + "GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 3);
+    ArrOutText (strPath_s + "GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 4);
+    ArrOutText (strPath_s + "GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 5);
+    ArrOutText (strPath_s + "GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 6);
+    ArrOutText (strPath_s + "GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 7);
+    ArrOutText (strPath_s + "GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 8);
+    ArrOutText (strPath_s + "GenGrid\\Stator\\", "stat_mat", N_s, M_s, stator_grid_par.Np_s,  stator_grid_par.Np_p, stat_grid_pos, 9);
+
+    int N_Ej = rotor_grid_par.Col/2;
+    int N_Hj = stator_grid_par.Col/2;
+    std::string strPath_j = "D:\\work\\Gen2D_FDTD\\TextFiles\\";
+    ArrOutText ( strPath_j + "JointGrid\\", "Ez_rotor_joint" , N_Ej, join_Ez_grid_pos);
+    ArrOutText ( strPath_j + "JointGrid\\", "Hy_stator_joint", N_Hj, join_Hy_grid_pos);
 }
 
 GenGrid2D::~GenGrid2D()

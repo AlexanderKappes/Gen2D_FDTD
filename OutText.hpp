@@ -6,5 +6,6 @@ void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, 
 void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p ,double *arr_out);
 void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p ,QVector<double> &arr_out);
 void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, int Np_p, QVector<grid_data> &arr_out, int gd);
+void ArrOutText (std::string strPath, std::string base, int N, QVector<join_grid_data> &arr_out);
 
 #endif // OUTTEXT_HPP
