@@ -1,4 +1,4 @@
-﻿#ifndef MAINWINDOW_H
+﻿ #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include "ImageWork.hpp"
@@ -26,7 +26,7 @@ public:
     const double TX_o = 1.0;    const double TY_o = 1.0;    const double TZ_o = 1.0;
     const int    Xsize_o = 10;      const int Ysize_o = 10;      const int Zsize_o = 10;
 
-    double dT_em = 0.0000000001;//10^(-8)
+    double dT_em = 0.00000001;//10^(-8)
 
     //double c = c_light;
     //double eo = epsilon_o;

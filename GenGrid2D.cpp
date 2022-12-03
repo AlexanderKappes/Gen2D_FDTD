@@ -692,26 +692,30 @@ void GenGrid2D ::IntervalsCalc()
     {
         for (int j = 0; j < M_r; j++)
             {
-                if (j < (M_r - 2))//Расчет расстояний между точками
+                //Расчет расстояний между точками
+            if (j < (M_r - 2)) //dX
                 {
                     x_dx_r = rot_grid_pos[j + i*M_r].x - rot_grid_pos[j + 2 + i*M_r].x;
                     y_dx_r = rot_grid_pos[j + i*M_r].y - rot_grid_pos[j + 2 + i*M_r].y;
 
-                    if (i  < (N_r - 2))
-                      {
-                        x_dy_r = rot_grid_pos[j + i*M_r].x - rot_grid_pos[j + i*M_r + 2*M_r].x;
-                        y_dy_r = rot_grid_pos[j + i*M_r].y - rot_grid_pos[j + i*M_r + 2*M_r].y;
-                      }
-                    else
-                    {
-                        x_dy_r = rot_grid_pos[j + i*M_r].x - rot_grid_pos[j + (i - N_r + 2)*M_r].x;
-                        y_dy_r = rot_grid_pos[j + i*M_r].y - rot_grid_pos[j + (i - N_r + 2)*M_r].y;
-                    }
-
-                    rot_dy[j + i*M_r] = sqrt (x_dy_r * x_dy_r + y_dy_r * y_dy_r);
                     rot_dx[j + i*M_r] = sqrt (x_dx_r * x_dx_r + y_dx_r * y_dx_r);
                 }
 
+                //dY
+                if (i  < (N_r - 2))
+                  {
+                    x_dy_r = rot_grid_pos[j + i*M_r].x - rot_grid_pos[j + i*M_r + 2*M_r].x;
+                    y_dy_r = rot_grid_pos[j + i*M_r].y - rot_grid_pos[j + i*M_r + 2*M_r].y;
+                  }
+                else
+                {
+                    x_dy_r = rot_grid_pos[j + i*M_r].x - rot_grid_pos[j + (i - N_r + 2)*M_r].x;
+                    y_dy_r = rot_grid_pos[j + i*M_r].y - rot_grid_pos[j + (i - N_r + 2)*M_r].y;
+                }
+
+                rot_dy[j + i*M_r] = sqrt (x_dy_r * x_dy_r + y_dy_r * y_dy_r);
+
+                //Определение типа точки
                 if (rot_grid_pos[j + i*M_r].EH == 1)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
                 {
                     rot_grid_pos[j + i*M_r].EHnumX = EZnumX_r;
@@ -758,26 +762,28 @@ void GenGrid2D ::IntervalsCalc()
     {
         for (int j = 0; j < M_s; j++)
             {
-                if (j < (M_s - 2))//Расчет расстояний между точками
+                //Расчет расстояний между точками
+                if (j < (M_s - 2))//dX
                 {
                     x_dx_s = stat_grid_pos[j + i*M_s].x - stat_grid_pos[j + 2 + i*M_s].x;
                     y_dx_s = stat_grid_pos[j + i*M_s].y - stat_grid_pos[j + 2 + i*M_s].y;
 
-                    if (i  < (N_s - 2))
-                      {
-                        x_dy_s = stat_grid_pos[j + i*M_s].x - stat_grid_pos[j + i*M_s + 2*M_s].x;
-                        y_dy_s = stat_grid_pos[j + i*M_s].y - stat_grid_pos[j + i*M_s + 2*M_s].y;
-                      }
-                    else
-                    {
-                        x_dy_s = stat_grid_pos[j + i*M_s].x - stat_grid_pos[j + (i - N_s + 2)*M_s].x;
-                        y_dy_s = stat_grid_pos[j + i*M_s].y - stat_grid_pos[j + (i - N_s + 2)*M_s].y;
-                    }
-
-                    stat_dy[j + i*M_s] = sqrt (x_dy_s * x_dy_s + y_dy_s * y_dy_s);
                     stat_dx[j + i*M_s] = sqrt (x_dx_s * x_dx_s + y_dx_s * y_dx_s);
                 }
 
+                if (i  < (N_s - 2))//dY
+                  {
+                    x_dy_s = stat_grid_pos[j + i*M_s].x - stat_grid_pos[j + i*M_s + 2*M_s].x;
+                    y_dy_s = stat_grid_pos[j + i*M_s].y - stat_grid_pos[j + i*M_s + 2*M_s].y;
+                  }
+                else
+                {
+                    x_dy_s = stat_grid_pos[j + i*M_s].x - stat_grid_pos[j + (i - N_s + 2)*M_s].x;
+                    y_dy_s = stat_grid_pos[j + i*M_s].y - stat_grid_pos[j + (i - N_s + 2)*M_s].y;
+                }
+
+                stat_dy[j + i*M_s] = sqrt (x_dy_s * x_dy_s + y_dy_s * y_dy_s);
+                //Определение типа точки
                 if (stat_grid_pos[j + i*M_s].EH == 1)// EH = 1 - Ez // EH = 2 - Hx // EH = 3 - Hy
                 {
                     stat_grid_pos[j + i*M_s].EHnumX = EZnumX_s;
@@ -796,7 +802,6 @@ void GenGrid2D ::IntervalsCalc()
                     stat_grid_pos[j + i*M_s].EHnumY = HYnumY_s;
                     HYnumY_s++;
                 }
-
             }
 
         EZnumY_s = 0;

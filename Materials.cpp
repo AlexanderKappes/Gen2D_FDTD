@@ -163,33 +163,71 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
     ALLOC_2D(g->ceze,    N,     M,  double);
     ALLOC_2D(g->cezhx,   N,     M,  double);
     ALLOC_2D(g->cezhy,   N,     M,  double);
-    double sigma, epsilon, mu;
-    double dx, dy;
+    double sigma = 0.0, epsilon = 0.0, mu = 0.0;
+    double dx_Ez_r = 0.0, dy_Ez_r = 0.0, dx_Hy_r = 0.0, dy_Hx_r = 0.0;
+    double dx_Ez_s = 0.0, dy_Ez_s = 0.0, dx_Hy_s = 0.0, dy_Hx_s = 0.0;
 
     if (part)
     {
 
         /* set magnetic-field update coefficients */
-        for (i = 0; i < N; i++)
-            for (j = 0; j < M - 2; j++) //dy, dx в нижних пазах равен нулю, поэтому до них доходить нельзя, иначе деление на ноль
+        for (i = 0; i < N; i+=2)
+            for (j = 0; j < M; j+=2) //dy, dx в нижних пазах равен нулю, поэтому до них доходить нельзя, иначе деление на ноль
             {
+
                 mu      = rot_mat[j  + i * M].mu;
                 sigma   = rot_mat[j  + i * M].sigma;
                 epsilon = rot_mat[j  + i * M].epsilon;
 
-                dy      = GenGr->rot_dy[j + i*M];
-                dx      = GenGr->rot_dx[j + i*M];
+                dy_Ez_r      = GenGr->rot_dy[j   + i*M];
+                if (i == 0)//Если первая строка
+                {
+                    dy_Hx_r      = GenGr->rot_dy[j   + N*M - 2*M];//Связь с элементом из предпоследней строки
+                }
+                else
+                {
+                    dy_Hx_r      = GenGr->rot_dy[j   + i*M - 2*M];
+                }
+
+                if (j == 0)//Если первый столбец
+                {
+                    dx_Hy_r      = GenGr->rot_dx[j+2 + i*M];
+                }
+                else
+                {
+                    dx_Hy_r      = GenGr->rot_dx[j-2 + i*M];
+                }
+
+                if (j == M - 2)
+                {
+                    dx_Ez_r      = GenGr->join_Ez_grid_pos [i/2].dx;
+                }
+                else if (j < M - 2)
+                {
+                    dx_Ez_r      = GenGr->rot_dx[j   + i*M];
+                }
 
                 g->chxh  [j  + i * M] = 1.0;
-                g->chxe  [j  + i * M] = dT / (mu * dy);
+                g->chxe  [j  + i * M] = dT / (mu * dy_Ez_r);
 
                 g->chyh [j  + i * M] = 1.0;
-                g->chye [j  + i * M] = dT / (mu * dx);
+                g->chye [j  + i * M] = dT / (mu * dx_Ez_r);
 
-                g->ceze  [j  + i * M] = (1.0 - sigma * dT / (2 * epsilon)) / (1.0 + sigma * dT / (2 * epsilon));
-                g->cezhx [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dx);
-                g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy);
+                g->ceze  [j  + i * M] = (1.0 -  sigma * dT/(2 * epsilon))  / (1.0 + sigma * dT / (2 * epsilon));
+                g->cezhx [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dx_Hy_r);
+                g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy_Hx_r);
 
+                double chxh = g->chxh  [j  + i * M];
+                double chxe = g->chxe  [j  + i * M];
+
+                double chyh = g->chyh [j  + i * M];
+                double chye = g->chye [j  + i * M];
+
+                double ceze = g->ceze  [j  + i * M];
+                double cezhx = g->cezhx [j  + i * M];
+                double cezhy = g->cezhy [j  + i * M];
+
+                int checko = 0;
             }
         ArrOutText (strPath + "\\Coefficients\\Rotor\\", "Ceze_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->ceze);
         ArrOutText (strPath + "\\Coefficients\\Rotor\\", "Cezhx_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhx);
@@ -203,25 +241,55 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
     }
     else
     {
-        for (i = 0; i < N; i++)
-            for (j = 0; j < M - 2; j++)
+        for (i = 0; i < N; i+=2)
+            for (j = 0; j < M - 2; j+=2)
             {
                 mu      = stat_mat[j  + i * M].mu;
                 sigma   = stat_mat[j  + i * M].sigma;
                 epsilon = stat_mat[j  + i * M].epsilon;
 
-                dy      = GenGr->stat_dy[j + i*M];
-                dx      = GenGr->stat_dx[j + i*M];
+                dy_Ez_s      = GenGr->stat_dy[j   + i*M];
+                dx_Ez_s      = GenGr->stat_dx[j   + i*M];
+
+                if (i == 0)//Если первая строка
+                {
+                    dy_Hx_s      = GenGr->stat_dy[j   + N*M - 2*M];//Связь с элементом из предпоследней строки
+                }
+                else
+                {
+                    dy_Hx_s      = GenGr->stat_dy[j   + i*M - 2*M];
+                }
+
+                if (j == 0)//Если первый столбец
+                {
+                    dx_Hy_s      = GenGr->join_Hy_grid_pos [i/2].dx;
+                }
+                else
+                {
+                    dx_Hy_s      = GenGr->stat_dx[j-2 + i*M];
+                }
 
                 g->chxh  [j  + i * M] = 1.0;
-                g->chxe  [j  + i * M] = dT / (mu * dy);
+                g->chxe  [j  + i * M] = dT / (mu * dy_Ez_s);
 
                 g->chyh [j  + i * M] = 1.0;
-                g->chye [j  + i * M] = dT / (mu * dx);
+                g->chye [j  + i * M] = dT / (mu * dx_Ez_s);
 
-                g->ceze  [j  + i * M] = (1.0 - sigma * dT / (2 * epsilon)) / (1.0 + sigma * dT / (2 * epsilon));
-                g->cezhx [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dx);
-                g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy);
+                g->ceze  [j  + i * M] = (1.0 -  sigma * dT/(2 * epsilon))  / (1.0 + sigma * dT / (2 * epsilon));
+                g->cezhx [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dx_Hy_s);
+                g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy_Hx_s);
+
+                double chxh = g->chxh  [j  + i * M];
+                double chxe = g->chxe  [j  + i * M];
+
+                double chyh = g->chyh [j  + i * M];
+                double chye = g->chye [j  + i * M];
+
+                double ceze = g->ceze  [j  + i * M];
+                double cezhx = g->cezhx [j  + i * M];
+                double cezhy = g->cezhy [j  + i * M];
+
+                int checko = 0;
             }
         ArrOutText (strPath + "\\Coefficients\\Stator\\", "Ceze_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->ceze);
         ArrOutText (strPath + "\\Coefficients\\Stator\\", "Cezhx_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhx);
