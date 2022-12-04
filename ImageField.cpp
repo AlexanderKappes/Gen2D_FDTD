@@ -66,6 +66,7 @@ ImageField::ImageField(QCustomPlot *CP, QString NameCP)
 
 void ImageField::OpenFiles(std::string nameFile, int Nt, int &N, int &M, bool part)
 {
+
     std::string strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\";
     std::string tmp, res;
 
@@ -160,8 +161,8 @@ void ImageField::addSnapshot(QCustomPlot *Cp, int Nt, grid_fdtd *g_r, grid_fdtd 
     // set up the QCPColorMap:
    int M_r = 0, M_s = 0, N_r = 0, N_s = 0;
 
-   OpenFiles("Ez_Rotor", Nt, N_r, M_r, true);
-   OpenFiles("Ez_Stator", Nt, N_s, M_s, false);
+   OpenFiles("\\Rotor\\Ez_Rotor", Nt, N_r, M_r, true);
+   OpenFiles("\\Stator\\Ez_Stator", Nt, N_s, M_s, false);
 
     int nx = 2000;
     int ny = 2000;

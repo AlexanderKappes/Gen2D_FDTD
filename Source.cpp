@@ -49,7 +49,7 @@ void Source::SourceE (grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
             for (j = 0; j < (M - 2 - 1); j++)
             {
                 if( GenGr->rot_grid_pos[j + i*M].source)
-                    g->ez   [j  + i * M] = 0;
+                    g->ez   [j  + i * M] = 1;
             }
     }
     else

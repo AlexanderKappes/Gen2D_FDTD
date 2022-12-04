@@ -7,7 +7,7 @@ Fdtd_calc::Fdtd_calc()
 }
 
 
-void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, int im_out)
+void Fdtd_calc::updateH2d(grid_fdtd *g, grid_fdtd *gj, GenGrid2D *GenGr, double dT, bool part, int im_out)
 {
     unsigned int i, j;
     unsigned int M, N;
@@ -34,6 +34,7 @@ void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, 
     }
     if (g->type == oneDGrid)
         {
+        /*
             for (i = 0; i < (N - 1); i++)
             {
                 Chyh        = g->chyh[i];
@@ -43,27 +44,28 @@ void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, 
                 Ez          = g->ez[i]; 
                 g->hy[i]   = Chyh * Hy + Chye * (Ez_next_x - Ez);
             }
+            */
         }
     else {
-        for (i = 0; i < N; i++)
-            for (j = 0; j < (M - 2 - 1); j++)
+        for (i = 0; i < N; i+=2)
+            for (j = 0; j < M; j+=2)
             {
                     Chxh        = g->chxh [j  + i * M];
-                    Hx          = g->hx   [j  + i * M];
+                    Hx          = g->hx   [j  + (i+1) * M];
                     Chxe        = g->chxe [j  + i * M];
-                    Ez_next_x   = g->ez   [(j + 1)  + i * M];
+                    Ez_next_x   = g->ez   [j  + (i+2) * M];
                     Ez          = g->ez   [j  + i * M];
                     g->hx   [j  + i * M] = Chxh * Hx - Chxe * (Ez_next_x - Ez);
                 }
 
-        for (i = 0; i < N; i++)
-            for (j = 0; j < (M - 2 - 1); j++)
+        for (i = 0; i < N; i+=2)
+            for (j = 0; j < M; j+=2)
             {
-                    Chyh        = g->chyh [j  + i * M];
-                    Hy          = g->hy   [j  + i * M];
-                    Chye        = g->chye [j  + i * M];
-                    Ez_next_y   = g->ez   [(j + 1)  + i * M];
-                    Ez          = g->ez   [j  + i * M];
+                    Chyh        = g->chyh [j + i * M];
+                    Hy          = g->hy   [j + 1  + i * M];
+                    Chye        = g->chye [j + i * M];
+                    Ez_next_y   = g->ez   [j + 2  + i * M];
+                    Ez          = g->ez   [j + i * M];
                     g->hy   [j  + i * M] = Chyh * Hy + Chye * (Ez_next_y - Ez);
                 }
          }
@@ -84,7 +86,7 @@ void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, 
 }
 
 /* update electric field */
-void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, int im_out)  {
+void Fdtd_calc::updateE2d(grid_fdtd *g, grid_fdtd *gj, GenGrid2D *GenGr, double dT, bool part, int im_out)  {
 
     unsigned int i, j;
     unsigned int M, N;
@@ -110,6 +112,7 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, 
 
     if (g->type == oneDGrid)
         {
+        /*
         for (i = 1; i < (N - 1); i++)
             {
                 Ez          = g->ez[i];
@@ -120,22 +123,58 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part, 
                 Hy_pr       = g->hy[i-1];
                 g->ez[i]    = Ceze * Ez + Cezhx * (Hy - Hy_pr);
             }
+            */
         }
     else
         {
-        for (i = 1; i < (N - 1); i++)
-            for (j = 0; j < (M - 2 - 1); j++)
+        for (i = 1; i < N; i+=2)
+            for (j = 0; j < M; j+=2)
             {
-                    Ez      = g->ez     [j  + i * M];
+                    if (j == 0)
+                    {
+                        Ez      = 0;
+                    }
+                    //Добавить связь с сеткой ротора
+                    /////////////////////////////////////
+                    else if (j == (M-2) && part)
+                    {
+                        Ez      = g->ez     [j  + i * M];
+                    }
+                    else
+                    {
+                        Ez      = g->ez     [j  + i * M];
+                    }
                     Ceze    = g->ceze   [j  + i * M];
                     Cezhx   = g->cezhx  [j  + i * M];
                     Cezhy   = g->cezhy  [j  + i * M];
                     Hy      = g->hy     [j  + i * M];
-                    Hy_pr   = g->hy     [j  + (i - 1) * M];
-                    Hx      = g->hx     [j  + i * M];
-                    Hx_pr   = g->hx     [(j - 1)  + i * M];
+
+                    if (j == 0 && part)
+                    {
+                        Hy_pr   = 0;
+                    }
+                    else if (j == 0 && !part)
+                    {
+                        //Добавить связь с сеткой ротора
+                        /////////////////////////////////////
+                        Hy_pr   = g->hy     [j +1  + i * M];
+                    }
+                        else
+                    {
+                        Hy_pr   = g->hy     [j +1  + i * M];
+                    }
+
+                    if (i == 0)
+                    {
+                        Hx      = g->hx     [j  + (i + 1) * M];
+                    }
+                        else
+                    {
+                        Hx_pr   = g->hx     [j   + N*M - 2*M];
+                    }
+
                     g->ez [j  + i * M] = Ceze * Ez + Cezhx * (( Hy - Hy_pr) - ( Hx - Hx_pr));
-                }
+            }
         }
 
     iE++;
