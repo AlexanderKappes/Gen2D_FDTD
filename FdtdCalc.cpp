@@ -65,7 +65,18 @@ void Fdtd_calc::updateH2d(grid_fdtd *g, grid_fdtd *gj, GenGrid2D *GenGr, double 
                     Hy          = g->hy   [j + 1  + i * M];
                     Chye        = g->chye [j + i * M];
                     Ez_next_y   = g->ez   [j + 2  + i * M];
-                    Ez          = g->ez   [j + i * M];
+                    if (j  < (M-2))
+                    {
+                        Ez          = g->ez   [j + i * M];
+                    }
+                    else if (j == (M-2) && part)
+                        //Cвязь с сеткой статора через Ez
+                    {
+                        GenGr->join_Ez_grid_pos[j].val =
+                                g->ez   [j  + GenGr->join_Ez_grid_pos[j].i2 * M] * GenGr->join_Ez_grid_pos[j].arg1/GenGr->join_Ez_grid_pos[j].arg +
+                                g->ez   [j  + GenGr->join_Ez_grid_pos[j].i1 * M] * GenGr->join_Ez_grid_pos[j].arg2/GenGr->join_Ez_grid_pos[j].arg;
+                        Ez      = g->ez     [j  + i * M];
+                    }
                     g->hy   [j  + i * M] = Chyh * Hy + Chye * (Ez_next_y - Ez);
                 }
          }
@@ -134,12 +145,9 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, grid_fdtd *gj, GenGrid2D *GenGr, double 
                     {
                         Ez      = 0;
                     }
-                    //Добавить связь с сеткой ротора
-                    /////////////////////////////////////
-                    else if (j == (M-2) && part)
-                    {
-                        Ez      = g->ez     [j  + i * M];
-                    }
+
+
+
                     else
                     {
                         Ez      = g->ez     [j  + i * M];
@@ -155,8 +163,7 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, grid_fdtd *gj, GenGrid2D *GenGr, double 
                     }
                     else if (j == 0 && !part)
                     {
-                        //Добавить связь с сеткой ротора
-                        /////////////////////////////////////
+                        //Cвязь с сеткой ротора через Hy
                         Hy_pr   = g->hy     [j +1  + i * M];
                     }
                         else

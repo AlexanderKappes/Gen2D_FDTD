@@ -36,6 +36,9 @@ struct join_grid_data{
     double dy;
 
     double val;
+
+    int i1;
+    int i2;
 };
 
 

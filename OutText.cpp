@@ -242,9 +242,11 @@ void ArrOutText (std::string strPath, std::string base, int N, QVector<join_grid
     // 4 - arg;
     // 5 - arg1;
     // 6 - arg2;
-    // 7 - dx;
-    // 8 - dy;
-    // 9 - val;
+    // 7 - i1;
+    // 9 - i2
+    // 10 - dx;
+    // 11 - dy;
+    // 12 - val;
 
 
 
@@ -261,14 +263,12 @@ void ArrOutText (std::string strPath, std::string base, int N, QVector<join_grid
     str_out = std::to_string(N) + "\n";
     fputs(str_out.c_str(), out);
 
-    int p = 0;
-
     std::string str_out_x, str_out_y, str_out_Fi_j, str_out_arg,
-                str_out_arg1, str_out_arg2, str_out_dx, str_out_dy, str_out_val;
+                str_out_arg1, str_out_arg2, str_out_dx, str_out_dy, str_out_val, str_out_i1, str_out_i2;
 
 
 
-    str_out = std::string("x") + "\t" + "\t" + "\t" + std::string("y") +"\t"+ "\t" + "\t" + std::string("Fi_j") +"\t" +"\t" + std::string("arg") +"\t" + "\t" + "\t" + std::string("arg1") + "\t" + "\t" + std::string("arg2") + "\t" + "\t" + std::string("dx") + "\t" + "\t" + "\t" + std::string("dy") + "\t" + "\t" + "\t" + std::string("val");
+    str_out = std::string("x") + "\t" + "\t" + "\t" + std::string("y") +"\t"+ "\t" + "\t" + std::string("Fi_j") +"\t" +"\t" + std::string("arg") +"\t" + "\t" + "\t" + std::string("arg1") + "\t" + "\t" + std::string("arg2") + "\t" + "\t" + std::string("i1") + "\t" + std::string("i2") + "\t" + "\t" + std::string("dx") + "\t" + "\t" + "\t" + std::string("dy") + "\t" + "\t" + "\t" + std::string("val");
     fputs(str_out.c_str(), out);
     fputs("\n", out);
 
@@ -280,11 +280,13 @@ void ArrOutText (std::string strPath, std::string base, int N, QVector<join_grid
         str_out_arg = std::to_string(arr_out[i].arg);
         str_out_arg1 = std::to_string(arr_out[i].arg1);
         str_out_arg2 = std::to_string(arr_out[i].arg2);
+        str_out_i1 = std::to_string(arr_out[i].i1);
+        str_out_i2 = std::to_string(arr_out[i].i2);
         str_out_dx = std::to_string(arr_out[i].dx);
         str_out_dy = std::to_string(arr_out[i].dy);
         str_out_val = std::to_string(arr_out[i].val);
 
-        str_out = str_out_x +"\t" + str_out_y +"\t" + str_out_Fi_j +"\t" + str_out_arg +"\t" + str_out_arg1 +"\t" + str_out_arg2 +"\t" + str_out_dx +"\t" + str_out_dy +"\t" + str_out_val;
+        str_out = str_out_x +"\t" + str_out_y +"\t" + str_out_Fi_j +"\t" + str_out_arg +"\t" + str_out_arg1 +"\t" + str_out_arg2 +"\t"  + str_out_i1 +"\t" + str_out_i2 +"\t" + str_out_dx +"\t" + str_out_dy +"\t" + str_out_val;
         fputs(str_out.c_str(), out);
         fputs("\n", out);
     }

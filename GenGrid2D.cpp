@@ -55,7 +55,7 @@ grid_data set_grid_data(double x_in,    double y_in,    int sector_in, int point
     return val;
 }
 
-join_grid_data set_join_grid_data(double x_in,    double y_in,    double Fi_j_in, double arg_in, double arg1_in, double arg2_in, double dx_in, double dy_in, double val_in)
+join_grid_data set_join_grid_data(double x_in,    double y_in,    double Fi_j_in, double arg_in, double arg1_in, double arg2_in, double dx_in, double dy_in, double val_in, int i1_in, int i2_in )
 {
     join_grid_data valG;
 
@@ -71,17 +71,8 @@ join_grid_data set_join_grid_data(double x_in,    double y_in,    double Fi_j_in
     valG.dy           = dy_in;
     valG.val          = val_in;
 
-    return valG;
-}
-
-join_grid_data set_join_grid_arg(double arg_in,    double arg1_in,    double arg2_in)
-{
-    join_grid_data valG;
-
-    valG.arg    = arg_in;
-    valG.arg1   = arg1_in;
-    valG.arg2   = arg2_in;
-
+    valG.i1           = i1_in;
+    valG.i2           = i2_in;
     return valG;
 }
 
@@ -350,7 +341,7 @@ void GenGrid2D ::Gen_Grid_Pos_rot(GenGeom2D *G, double arg_beg)
                                             Fi_j = slot_start_arg +G->rot_par.slot_arg + G->rot_par.pin_arg*(double) ray/(double) rotor_grid_par.Np_p;
                                         }
                                         double val_j = v_abs + rotor_grid_par.dh_level[lev]   *   (double)(i+1)/(double)(rotor_grid_par.M_w);
-                                        join_Ez_grid_pos.push_back(set_join_grid_data(x[ray]*val_j, y[ray]*val_j,    Fi_j*180/M_PI, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
+                                        join_Ez_grid_pos.push_back(set_join_grid_data(x[ray]*val_j, y[ray]*val_j,    Fi_j*180/M_PI, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0));
                                     }
                             }
                         }
@@ -449,7 +440,7 @@ void GenGrid2D ::Gen_Grid_Pos_stat( GenGeom2D *G)
                                         }
 
                                         double val_j = v_abs - dh_rot_wedge * 1.0/(double)(rotor_grid_par.M_w);
-                                        join_Hy_grid_pos.push_back(set_join_grid_data(x[ray]*val_j, y[ray]*val_j,    Fi_j*180/M_PI, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
+                                        join_Hy_grid_pos.push_back(set_join_grid_data(x[ray]*val_j, y[ray]*val_j,    Fi_j*180/M_PI, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0));
 
                                     }
                             }
@@ -531,6 +522,7 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
 
     //Ротор Hy
     int id_r = 0;
+    int i_r = 0;
     int ij_r = 0;
     int EHrot = 0;
 
@@ -554,7 +546,7 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
                 double slot_start_arg = slot_idx*(G->rot_par.slot_arg+G->rot_par.pin_arg) + arg_beg;// Номер паза * на угол Паза + Угол Зубца
 
                 //slot ray. Координаты середины паза pin ray. Координаты середины зубца
-                while (id_r < rotor_grid_par.Np_s)
+                while (id_r < rotor_grid_par.Np_s && (ij_r * 2) != stator_grid_par.Col)
                 {
                     EHrot = rot_grid_pos[1+id_r*rotor_grid_par.Row].EH;
 
@@ -562,6 +554,7 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
                     id_r += 2;
                     Fi_2_r = (slot_start_arg +G->rot_par.slot_arg*(double) (id_r) /(double) rotor_grid_par.Np_s)*180/M_PI;
 
+
                     while (join_Hy_grid_pos[ij_r].Fi_j >= Fi_1_r && join_Hy_grid_pos[ij_r].Fi_j <= Fi_2_r && EHrot == 3 )
                         {
 
@@ -573,20 +566,26 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
                             join_Hy_grid_pos[ij_r].arg2 = arg2_r;
                             join_Hy_grid_pos[ij_r].arg  = arg_r;
 
+                            join_Hy_grid_pos[ij_r].i1  = i_r;
+                            join_Hy_grid_pos[ij_r].i2  = i_r + 2;
+
                             ij_r++;
                             if ((ij_r * 2) == stator_grid_par.Col)
                                 break;
                         }
+                    i_r += 2;
                 }
                 id_r = 0;
 
-                while (id_r < rotor_grid_par.Np_p)
+
+                while (id_r < rotor_grid_par.Np_p && (ij_r * 2) != stator_grid_par.Col)
                 {
                     EHrot = rot_grid_pos[1+id_r*rotor_grid_par.Row].EH;
 
-                    Fi_1_r = (slot_start_arg +G->rot_par.slot_arg+G->rot_par.pin_arg*(double) id_r/(double) rotor_grid_par.Np_s)*180/M_PI;
+                    Fi_1_r = (slot_start_arg +G->rot_par.slot_arg+G->rot_par.pin_arg*(double) id_r/(double) rotor_grid_par.Np_p)*180/M_PI;
                     id_r += 2;
-                    Fi_2_r = (slot_start_arg +G->rot_par.slot_arg+G->rot_par.pin_arg*(double) (id_r) /(double) rotor_grid_par.Np_s)*180/M_PI;
+                    Fi_2_r = (slot_start_arg +G->rot_par.slot_arg+G->rot_par.pin_arg*(double) (id_r) /(double) rotor_grid_par.Np_p)*180/M_PI;
+
 
                     while (join_Hy_grid_pos[ij_r].Fi_j >= Fi_1_r && join_Hy_grid_pos[ij_r].Fi_j <= Fi_2_r && EHrot == 3 )
                         {
@@ -599,10 +598,14 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
                             join_Hy_grid_pos[ij_r].arg2 = arg2_r;
                             join_Hy_grid_pos[ij_r].arg  = arg_r;
 
+                            join_Hy_grid_pos[ij_r].i1  = i_r;
+                            join_Hy_grid_pos[ij_r].i2  = i_r + 2;
+
                             ij_r++;
                             if ((ij_r * 2) == stator_grid_par.Col)
                                 break;
                         }
+                    i_r += 2;
                 }
                 id_r = 0;
             }
@@ -611,6 +614,7 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
 
     //Статор Ez
     int id_s = 0;
+    int i_s = 0;
     int ij_s = 0;
     int EHstat = 0;
 
@@ -629,35 +633,18 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
             {
                 int     slot_idx        = pole * G->stat_par.n_slot_pin_pole_ph*3 + ph*G->stat_par.n_slot_pin_pole_ph + slot;
                 double  slot_start_arg  = slot_idx*(G->stat_par.slot_arg+G->stat_par.pin_arg);
+                //slot ray. Координаты середины паза pin ray. Координаты середины зубца
+                while (id_s < rotor_grid_par.Np_s && (ij_s * 2) != rotor_grid_par.Col)
+                {
+                    EHstat = stat_grid_pos[id_s*stator_grid_par.Row].EH;
 
-                for (int i = 0; i < (stator_grid_par.Np_s + stator_grid_par.Np_p) && (ij_s * 2) != rotor_grid_par.Col;i++)
-                    {
-                        EHstat = stat_grid_pos[i*stator_grid_par.Row].EH;
+                    Fi_1_s = (slot_start_arg +G->stat_par.slot_arg*(double) id_s/(double) stator_grid_par.Np_s)*180/M_PI;
+                    id_s += 2;
+                    Fi_2_s = (slot_start_arg +G->stat_par.slot_arg*(double) (id_s) /(double) stator_grid_par.Np_s)*180/M_PI;
 
-                        if (i == stator_grid_par.Np_s)
-                            id_s = 0;
-                        if (i < stator_grid_par.Np_s)
+                    while (join_Ez_grid_pos[ij_s].Fi_j >= Fi_1_s && join_Ez_grid_pos[ij_s].Fi_j <= Fi_2_s && EHstat == 1 )
                         {
-                            if ( EHstat == 1)
-                            {
-                                Fi_1_s = (slot_start_arg +G->stat_par.slot_arg*(double) id_s/(double) stator_grid_par.Np_s)*180/M_PI;
-                                Fi_2_s = (slot_start_arg +G->stat_par.slot_arg*(double) (id_s+2) /(double) stator_grid_par.Np_s)*180/M_PI;
-                            }
-                            id_s ++;
-                        }
-                        else
-                        {
-                            if (EHstat == 1)
-                            {
-                                Fi_1_s = (slot_start_arg +G->stat_par.slot_arg + G->stat_par.pin_arg*(double) id_s/(double) stator_grid_par.Np_p)*180/M_PI;
-                                Fi_2_s = (slot_start_arg +G->stat_par.slot_arg + G->stat_par.pin_arg*(double) (id_s + 2)/(double) stator_grid_par.Np_p)*180/M_PI;
-                            }
 
-                            id_s ++;
-                        }
-
-                        if (join_Ez_grid_pos[ij_s].Fi_j >= Fi_1_s && join_Ez_grid_pos[ij_s].Fi_j <= Fi_2_s && EHstat == 1 )
-                        {
                             arg1_s = join_Ez_grid_pos[ij_s].Fi_j - Fi_1_s;
                             arg2_s = Fi_2_s - join_Ez_grid_pos[ij_s].Fi_j;
                             arg_s = Fi_2_s - Fi_1_s;
@@ -666,13 +653,50 @@ void GenGrid2D ::Gen_Grid_Pos_join( GenGeom2D *G, double arg_beg)
                             join_Ez_grid_pos[ij_s].arg2 = arg2_s;
                             join_Ez_grid_pos[ij_s].arg  = arg_s;
 
+                            join_Ez_grid_pos[ij_s].i1  = i_s;
+                            join_Ez_grid_pos[ij_s].i2  = i_s + 2;
+
                             ij_s++;
+                            if ((ij_s * 2) == rotor_grid_par.Col)//Число точек сетки Joint в два раза меньше, чем строк сетки ротора
+                                break;
                         }
-                    }
+                    i_s +=2;
+                }
+                id_s = 0;
+
+                while (id_s < stator_grid_par.Np_p && (ij_s * 2) != rotor_grid_par.Col)
+                {
+                    EHrot = stat_grid_pos[id_s*stator_grid_par.Row].EH;
+
+                    Fi_1_s = (slot_start_arg +G->stat_par.slot_arg+G->stat_par.pin_arg*(double) id_s/(double) stator_grid_par.Np_p)*180/M_PI;
+                    id_s += 2;
+                    Fi_2_s = (slot_start_arg +G->stat_par.slot_arg+G->stat_par.pin_arg*(double) (id_s) /(double) stator_grid_par.Np_p)*180/M_PI;
+
+                    while (join_Ez_grid_pos[ij_s].Fi_j >= Fi_1_s && join_Ez_grid_pos[ij_s].Fi_j <= Fi_2_s && EHstat == 1 )
+                        {
+
+                            arg1_s = join_Ez_grid_pos[ij_s].Fi_j - Fi_1_s;
+                            arg2_s = Fi_2_s - join_Ez_grid_pos[ij_s].Fi_j;
+                            arg_s = Fi_2_s - Fi_1_s;
+
+                            join_Ez_grid_pos[ij_s].arg1 = arg1_s;
+                            join_Ez_grid_pos[ij_s].arg2 = arg2_s;
+                            join_Ez_grid_pos[ij_s].arg  = arg_s;
+
+                            join_Ez_grid_pos[ij_s].i1  = i_s;
+                            join_Ez_grid_pos[ij_s].i2  = i_s + 2;
+
+                            ij_s++;
+                            if ((ij_s * 2) == rotor_grid_par.Col)
+                                break;
+                        }
+                    i_s +=2;
+                }
                 id_s = 0;
             }
         }
     }
+
 }
 
 void GenGrid2D ::IntervalsCalc()
