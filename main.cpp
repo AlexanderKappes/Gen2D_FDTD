@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     ImageField  FI(w.ui->CP_EM_Field, "Electromagnetic field");
     double start_time =  clock(); // начальное время
 
-    int im_Out = 1000000;
+    int im_Out = 1000;
     // при dT_em = 0.00000001;//10^(-8) // im_Out = 10000000 // maxTime = 0.1 сек
     double maxTime = w.dT_em*im_Out;
 
@@ -42,6 +42,12 @@ int main(int argc, char *argv[])
     //*/
 
      FI.addSnapshot(w.ui->CP_EM_Field, im_Out, &g_r, &g_s, &w.GenGrid, &w.GenGeom);
+
+     int N_Ej = w.GenGrid.rotor_grid_par.Col/2;
+     int N_Hj = w.GenGrid.stator_grid_par.Col/2;
+     std::string strPath_j = "D:\\work\\Gen2D_FDTD\\TextFiles\\";
+     ArrOutText ( strPath_j + "JointGrid\\", "Ez_rotor_joint" , N_Ej, w.GenGrid.join_Ez_grid_pos);
+     ArrOutText ( strPath_j + "JointGrid\\", "Hy_stator_joint", N_Hj, w.GenGrid.join_Hy_grid_pos);
 
     double end_time = clock(); // конечное время
 

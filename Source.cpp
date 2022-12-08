@@ -45,11 +45,11 @@ void Source::SourceE (grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
         M = GenGr->rotor_grid_par.Row;
         N = GenGr->rotor_grid_par.Col;
 
-        for (i = 0; i < N; i++)
-            for (j = 0; j < (M - 2 - 1); j++)
+        for (i = 0; i < N; i+=2)
+            for (j = 0; j < M; j+=2)
             {
                 if( GenGr->rot_grid_pos[j + i*M].source)
-                    g->ez   [j  + i * M] = 1;
+                    g->ez   [j  + i * M] = 0.0;
             }
     }
     else
@@ -57,11 +57,11 @@ void Source::SourceE (grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
         M = GenGr->stator_grid_par.Row;
         N = GenGr->stator_grid_par.Col;
 
-        for (i = 0; i < N; i++)
-            for (j = 0; j < (M - 2 - 1); j++)
+        for (i = 0; i < N; i+=2)
+            for (j = 0; j < M; j+=2)
             {
                 if( GenGr->stat_grid_pos[j + i*M].source)
-                    g->ez   [j  + i * M] = 0;
+                    g->ez   [j  + i * M] = 100;
             }
     }
 }

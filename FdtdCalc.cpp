@@ -106,7 +106,6 @@ void Fdtd_calc::updateH2d(grid_fdtd *g, grid_fdtd *gj, GenGrid2D *GenGr, double 
             }
         }
 
-
     if (part && iH == im_out)
     {
         ArrOutText (strPath, "Hy_Rotor" + std::to_string(iH), N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->hy);
@@ -203,7 +202,7 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, grid_fdtd *gj, GenGrid2D *GenGr, double 
                         Hx_pr   = g->hx     [j   + N*M - 2*M];
                     }
 
-                    g->ez [j  + i * M] = Ceze * Ez + Cezhx * (( Hy - Hy_pr) - ( Hx - Hx_pr));
+                    g->ez [j  + i * M] = Ceze * Ez + Cezhy * ( Hy - Hy_pr) - Cezhx * ( Hx - Hx_pr);
             }
         }
 
@@ -216,10 +215,18 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, grid_fdtd *gj, GenGrid2D *GenGr, double 
             {
                 while (i == GenGr->join_Ez_grid_pos[nj].i1)
                 {
-                    GenGr->join_Ez_grid_pos[nj].val =
-                            g->ez   [M - 2 + GenGr->join_Ez_grid_pos[nj].i2 * M] * GenGr->join_Ez_grid_pos[nj].arg1/GenGr->join_Ez_grid_pos[nj].arg +
-                            g->ez   [M - 2 + GenGr->join_Ez_grid_pos[nj].i1 * M] * GenGr->join_Ez_grid_pos[nj].arg2/GenGr->join_Ez_grid_pos[nj].arg;
-                    //GenGr->join_Ez_grid_pos[nj].val = i + 1;
+                    double Ez1 = g->ez   [M - 2 + GenGr->join_Ez_grid_pos[nj].i1 * M];
+                    double Ez2 = g->ez   [M - 2 + GenGr->join_Ez_grid_pos[nj].i2 * M];
+                    double arg1 = GenGr->join_Ez_grid_pos[nj].arg1;
+                    double arg2 = GenGr->join_Ez_grid_pos[nj].arg2;
+                    double arg = GenGr->join_Ez_grid_pos[nj].arg;
+
+                    //GenGr->join_Ez_grid_pos[nj].val =
+                    //        g->ez   [M - 2 + GenGr->join_Ez_grid_pos[nj].i2 * M] * GenGr->join_Ez_grid_pos[nj].arg1/GenGr->join_Ez_grid_pos[nj].arg +
+                    //        g->ez   [M - 2 + GenGr->join_Ez_grid_pos[nj].i1 * M] * GenGr->join_Ez_grid_pos[nj].arg2/GenGr->join_Ez_grid_pos[nj].arg;
+
+                    GenGr->join_Ez_grid_pos[nj].val = Ez2*arg1/arg + Ez1*arg2/arg;
+
                     nj++;
                     if ((nj * 2) == GenGr->rotor_grid_par.Col)
                         break;
