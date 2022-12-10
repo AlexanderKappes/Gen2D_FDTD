@@ -217,17 +217,7 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
                 g->cezhx [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dx_Hy_r);
                 g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy_Hx_r);
 
-                double chxh = g->chxh  [j  + i * M];
-                double chxe = g->chxe  [j  + i * M];
-
-                double chyh = g->chyh [j  + i * M];
-                double chye = g->chye [j  + i * M];
-
-                double ceze = g->ceze  [j  + i * M];
-                double cezhx = g->cezhx [j  + i * M];
-                double cezhy = g->cezhy [j  + i * M];
-
-                int checko = 0;
+                //int checko = 0;
             }
         ArrOutText (strPath + "\\Coefficients\\Rotor\\", "Ceze_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->ceze);
         ArrOutText (strPath + "\\Coefficients\\Rotor\\", "Cezhx_Rotor", N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->cezhx);
@@ -279,17 +269,7 @@ void Materials::gridInit(grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
                 g->cezhx [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dx_Hy_s);
                 g->cezhy [j  + i * M] = (1/(1 + sigma * dT/(2 * epsilon))) * dT/ (epsilon * dy_Hx_s);
 
-                double chxh = g->chxh  [j  + i * M];
-                double chxe = g->chxe  [j  + i * M];
-
-                double chyh = g->chyh [j  + i * M];
-                double chye = g->chye [j  + i * M];
-
-                double ceze = g->ceze  [j  + i * M];
-                double cezhx = g->cezhx [j  + i * M];
-                double cezhy = g->cezhy [j  + i * M];
-
-                int checko = 0;
+                //int checko = 0;
             }
         ArrOutText (strPath + "\\Coefficients\\Stator\\", "Ceze_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->ceze);
         ArrOutText (strPath + "\\Coefficients\\Stator\\", "Cezhx_Stator", N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p,  g->cezhx);

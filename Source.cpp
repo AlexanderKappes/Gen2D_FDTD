@@ -9,7 +9,6 @@ Source::Source(int Nsh_in, double dT_in, double Imax_sin_in, double f_in, double
     Nsh         = Nsh_in;
     dT          = dT_in;
 
-    double ppw  = 30.0;
 }
 
 void Source::SourceSinSize()
@@ -35,7 +34,7 @@ void Source::SourceSinCreate ()
     }
 }
 
-void Source::SourceE (grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
+void Source::SourceE (grid_fdtd *g, GenGrid2D *GenGr, bool part)
 {
     unsigned int i, j;
     unsigned int M, N;
@@ -61,7 +60,7 @@ void Source::SourceE (grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part)
             for (j = 0; j < M; j+=2)
             {
                 if( GenGr->stat_grid_pos[j + i*M].source)
-                    g->ez   [j  + i * M] = 100;
+                    g->ez   [j  + i * M] = 50.0;
             }
     }
 }

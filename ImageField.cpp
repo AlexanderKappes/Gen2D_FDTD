@@ -164,8 +164,8 @@ void ImageField::addSnapshot(QCustomPlot *Cp, int Nt, grid_fdtd *g_r, grid_fdtd 
    OpenFiles("\\Rotor\\Ez_Rotor", Nt, N_r, M_r, true);
    OpenFiles("\\Stator\\Ez_Stator", Nt, N_s, M_s, false);
 
-    int nx = 8000;
-    int ny = 8000;
+    int nx = 6000;
+    int ny = 6000;
 
     colorMapIF->data()->setSize(nx, ny); // we want the color map to have nx * ny data points
     colorMapIF->data()->setRange(QCPRange(-GenGeom->stat_par.R_out - 1.0, GenGeom->stat_par.R_out + 1.0), QCPRange(-GenGeom->stat_par.R_out - 1.0, GenGeom->stat_par.R_out + 1.0)); // and span the coordinate range -4..4 in both key (x) and value (y) dimensions
@@ -174,10 +174,10 @@ void ImageField::addSnapshot(QCustomPlot *Cp, int Nt, grid_fdtd *g_r, grid_fdtd 
     colorMapIF->setName("Color map");
     // now we assign some data, by accessing the QCPColorMapData instance of the color map:
     double x_i, y_i;
-    double val_alpha = 100;//0...255 0 full transperent
+    double val_alpha = 150;//0...255 0 full transperent
 
     colorMapIF->data()->fill (0);
-    colorMapIF->data()->fillAlpha (100);
+    colorMapIF->data()->fillAlpha (val_alpha);
     colorMapIF->setInterpolate ( true);
 
     double x, y;

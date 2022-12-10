@@ -9,7 +9,7 @@ public:
 
     void SourceSinCreate ();
     void SourceSinSize      ();
-    void SourceE (grid_fdtd *g, GenGrid2D *GenGr, double dT, bool part);
+    void SourceE (grid_fdtd *g, GenGrid2D *GenGr, bool part);
 
     QVector<double> I_sin;
     QVector<double> time;
