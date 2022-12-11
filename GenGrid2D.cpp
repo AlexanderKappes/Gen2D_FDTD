@@ -14,24 +14,51 @@ GenGrid2D::GenGrid2D()
 
     grid_mark_size                  =7;
 
-    rotor_grid_par.Nmax = 50;
-    rotor_grid_par.Np_s = 4;//4// 10
-    rotor_grid_par.Np_p = 4;//4// 10
+    bool grid_size_test = true;
 
-    rotor_grid_par.M_w   = 4;//4// 6
-    rotor_grid_par.M_a   = 4;//4// 10
-    rotor_grid_par.M_b   = 32;//32// 40
-    rotor_grid_par.M_air = 0;
+    if (grid_size_test)
+    {
+        rotor_grid_par.Nmax = 50;
+        rotor_grid_par.Np_s = 4;
+        rotor_grid_par.Np_p = 4;
 
-    stator_grid_par.Nmax = 50;
-    stator_grid_par.Np_s = 4;//4// 10
-    stator_grid_par.Np_p = 8;//8// 10
+        rotor_grid_par.M_w   = 4;
+        rotor_grid_par.M_a   = 4;
+        rotor_grid_par.M_b   = 32;
+        rotor_grid_par.M_air = 0;
 
-    stator_grid_par.M_w   = 2;//2// 6
-    stator_grid_par.M_a   = 8;//8// 20
-    stator_grid_par.M_b   = 16;//16// 40
-    stator_grid_par.M_air = 6;//6// 20
-    stator_grid_par.M_ext = 6;//6// 6
+        stator_grid_par.Nmax = 50;
+        stator_grid_par.Np_s = 4;
+        stator_grid_par.Np_p = 8;
+
+        stator_grid_par.M_w   = 2;
+        stator_grid_par.M_a   = 8;
+        stator_grid_par.M_b   = 16;
+        stator_grid_par.M_air = 6;
+        stator_grid_par.M_ext = 6;
+
+    }
+    else
+        {
+            rotor_grid_par.Nmax = 50;
+            rotor_grid_par.Np_s = 10;
+            rotor_grid_par.Np_p = 10;
+
+            rotor_grid_par.M_w   = 6;
+            rotor_grid_par.M_a   = 10;
+            rotor_grid_par.M_b   = 40;
+            rotor_grid_par.M_air = 0;
+
+            stator_grid_par.Nmax = 50;
+            stator_grid_par.Np_s = 10;
+            stator_grid_par.Np_p = 10;
+
+            stator_grid_par.M_w   = 6;
+            stator_grid_par.M_a   = 20;
+            stator_grid_par.M_b   = 40;
+            stator_grid_par.M_air = 20;
+            stator_grid_par.M_ext = 6;
+        }
 
 }
 

@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     double end_time = clock(); // конечное время
     double search_time = end_time - start_time; // искомое время
     ui->time_prepare->setText(QString::fromStdString(std::to_string(search_time) + " мс"));
+
 }
 
 void MainWindow::customPlot(QCustomPlot *CP, QString NameCP)
@@ -585,4 +586,15 @@ void MainWindow::on_PB_source_new_clicked()
 void MainWindow::time_em_Label(double time)
 {
     ui->time_em->setText(QString::fromStdString(std::to_string(time) + " мс"));
+}
+
+void MainWindow::on_PB_nextSP_clicked()
+{
+    if (im_Out <= MaxStep)
+            SP_next++;
+
+    im_Out = Snapshot_step * SP_next;
+
+    //addSnapshot(ui->CP_EM_Field, im_Out, &GenGrid, &GenGeom);
+    int check = 0;
 }

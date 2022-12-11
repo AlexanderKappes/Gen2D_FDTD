@@ -1366,7 +1366,7 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="PB_apply">
     <property name="geometry">
      <rect>
       <x>110</x>
@@ -1431,6 +1431,32 @@
      <string>TextLabel</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="PB_start_calc">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>630</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Пуск расчета</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_nextSP">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>630</y>
+      <width>101</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Следующий кадр</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -1438,7 +1464,7 @@
      <x>0</x>
      <y>0</y>
      <width>1900</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

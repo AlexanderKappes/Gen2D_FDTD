@@ -75,88 +75,92 @@ void ImageField::OpenFiles(std::string nameFile, int Nt, int &N, int &M, bool pa
     int n1 = 0;
     char res_prev;
 
-    std::ifstream file_r( strPath+nameFile+std::to_string(Nt)+".txt");
+    std::ifstream file_r( strPath+nameFile+std::to_string(Nt)+".csv");
     while(getline(file_r, tmp))
     {
         res += tmp;
         res += '\n';
     }
 
+    unsigned int n2 = 0;
+
     for (unsigned int i = 0; i < res.length(); i++)
     {
-
-        if (res [i] != ' ')
+        //Вырезаем из потока значение
+        if (res [i] != ';' && res [i] != ' ')
         {
-            numberChar[n1] = res [i];
-            n1++;
+            numberChar[n2] = res [i];
+            n2++;
         }
+        //если дошли до разграничителя, то пропускаем пробел
+        if (res [i] == ';')
+        {
+            n2++;
+        }
+        //Определение М при достижении символа /n
         if (res [i] == '\n' &&  numCount == 1)
         {
             N = std::stof(numberChar);
-            numCount++;
-            n1 = n1 + 3;//два пробела и перенос
+            n1++;
             break;
         }
-
+        //Определение М при достижении символа ;
         if (res [i] == ' ' &&  numCount == 0)
         {
             M = std::stof(numberChar);
             numCount++;
-            n1 = 0;
+            n2 = 0;
         }
+
+        n1 ++;
     }
 
-    unsigned int n2 = 0;
+    n2 = 0;
 
     if (part)
-    {
-         ALLOC_2D(ez_IF_r,      N,     M,  double);
+        {
+            ALLOC_2D(ez_IF_r,      N,     M,  double);
+        }
+    else
+        {
+            ALLOC_2D(ez_IF_s,      N,     M,  double);
+        }
 
          for (int i = 0; i < N; i++)
          {
             for (int j = 0; j < M; j++)
                 {
-                     while (res [n1] != '\n' && res [n1] != '\t' )
+                     while (res [n1] != '\n' && res [n1] != ';' && res [n1] != ' ')
                              {
                                  numberChar[n2] = res [n1];
                                  n1++;
                                  n2++;
                              }
+
                     res_prev = res [n1];
                     n1++;
-                    if (res_prev == '\n' && res [n1] == '\n') n1++;
+                    if (res_prev == ';' && res [n1] == ' ')
+                        n1++;
 
-                     ez_IF_r[j + i*M]  = std::stof(numberChar);
+                    if (res_prev == '\n' && res [n1] == '\n')
+                        n1++;
+
+                    if (part)
+                    {
+                        ez_IF_r[j + i*M]  = std::stof(numberChar);
+                    }
+                    else
+                    {
+                        ez_IF_s[j + i*M]  = std::stof(numberChar);
+                    }
                      n2 = 0;
                 }
          }
-    }
-    else
-    {
-        ALLOC_2D(ez_IF_s,      N,     M,  double);
 
-        for (int i = 0; i < N; i++)
-        {
-           for (int j = 0; j < M; j++)
-               {
-                    while (res [n1] != '\n' && res [n1] != '\t' )
-                            {
-                                numberChar[n2] = res [n1];
-                                n1++;
-                                n2++;
-                            }
-                   res_prev = res [n1];
-                   n1++;
-                   if (res_prev == '\n' && res [n1] == '\n') n1++;
-
-                    ez_IF_s[j + i*M]  = std::stof(numberChar);
-                    n2 = 0;
-               }
-        }
-    }
+         int check = 0;
 }
 
-void ImageField::addSnapshot(QCustomPlot *Cp, int Nt, grid_fdtd *g_r, grid_fdtd *g_s, GenGrid2D *GenGr, GenGeom2D *GenGeom)
+void ImageField::addSnapshot(QCustomPlot *Cp, int Nt, GenGrid2D *GenGr, GenGeom2D *GenGeom)
 {
     // set up the QCPColorMap:
    int M_r = 0, M_s = 0, N_r = 0, N_s = 0;
@@ -208,21 +212,6 @@ void ImageField::addSnapshot(QCustomPlot *Cp, int Nt, grid_fdtd *g_r, grid_fdtd 
                 colorMapIF->data()->setCell(xInd, yInd, ez_IF_s [j + i*M_s]);
             }
     }
-/*
-     //ПРИМЕР (nx и ny  - число точек в выбранном диапазоне, при выгрузке массива нужно пробежаться по каждой из них по оси Х и Y)
-    // now we assign some data, by accessing the QCPColorMapData instance of the color map:
-    double x, y, z;
-    for (int xIndex=0; xIndex<nx; ++xIndex)
-    {
-      for (int yIndex=0; yIndex<ny; ++yIndex)
-      {
-        colorMapIF->data()->cellToCoord(xIndex, yIndex, &x, &y);
-        double r = 3*qSqrt(x*x+y*y)+1e-2;
-        z = 2*x*(qCos(r+2)/r-qSin(r+2)/r); // the B field strength of dipole radiation (modulo physical constants)
-        colorMapIF->data()->setCell(xIndex, yIndex, z);
-      }
-    }
-*/
 
     colorMapIF->rescaleDataRange();
     // rescale the key (x) and value (y) axes so the whole color map is visible:

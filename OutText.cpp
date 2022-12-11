@@ -248,8 +248,6 @@ void ArrOutText (std::string strPath, std::string base, int N, QVector<join_grid
     // 11 - dy;
     // 12 - val;
 
-
-
     for (int i = 0; i < 80; i ++)
         basename[i] = base[i]; // store data as a float
     for (std::string::size_type i = 0; i < strPath.length (); i ++) // строковый тип в тип char []
@@ -311,10 +309,10 @@ void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, 
             c_Path[i]=strPath[i];
         }
 
-    sprintf(filename, "%s%s.txt", c_Path, basename);//s -string, d - double
+    sprintf(filename, "%s%s.csv", c_Path, basename);//s -string, d - double
     out = fopen(filename, "w");
 
-    str_out = std::to_string(M) + " ";
+    str_out = std::to_string(M) + ";" + " ";
     fputs(str_out.c_str(), out);
     str_out = std::to_string(N) + "\n";
     fputs(str_out.c_str(), out);
@@ -327,7 +325,7 @@ void ArrOutText (std::string strPath, std::string base, int N, int M, int Np_s, 
         {
             temp = arr_out[j + i*M];
             if (j != (M-1))
-                str_out = std::to_string(temp) + "\t";
+                str_out = std::to_string(temp) + ";" + " ";
             else
                 str_out = std::to_string(temp);
 

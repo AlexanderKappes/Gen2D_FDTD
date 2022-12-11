@@ -14,7 +14,7 @@ public:
     QCPColorMap *colorMapIF;
     QCPColorScale *colorScaleIF;
     QCPMarginGroup *marginGroupIF;
-    void addSnapshot(QCustomPlot *Cp, int Nt, grid_fdtd *g_r, grid_fdtd *g_s, GenGrid2D *GenGr, GenGeom2D *GenGeom);
+    void addSnapshot(QCustomPlot *Cp, int Nt, GenGrid2D *GenGr, GenGeom2D *GenGeom);
     void OpenFiles(std::string nameFile, int Nt, int &N, int &M, bool part);
 
     double* ez_IF_r;

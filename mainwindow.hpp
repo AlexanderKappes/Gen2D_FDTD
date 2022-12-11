@@ -50,6 +50,11 @@ public:
     void time_em_Label(double time);
     Ui::MainWindow *ui;
 
+    int SP_next;
+    int im_Out;
+    int MaxStep;
+    int Snapshot_step;
+
 private slots:
     void titleDoubleClick(QMouseEvent* event);
     void axisLabelDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part);
@@ -86,6 +91,8 @@ private slots:
     void on_PB_source_new_clicked();
 
     void ChangeFunc();
+
+    void on_PB_nextSP_clicked();
 
 private:
    void ParGeomSet ();

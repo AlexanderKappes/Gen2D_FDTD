@@ -7,7 +7,7 @@ Fdtd_calc::Fdtd_calc()
 }
 
 
-void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, bool part, int im_out)
+void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, bool part)
 {
     int i, j;
     int M, N;
@@ -15,21 +15,19 @@ void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, bool part, int im_out)
     double Ez_next_y, Ez_next_x, Ez;
     double Chxh, Chxe, Chyh, Chye;
     double Hy, Hx;
-    std::string strPath;
-
 
     if (part)
     {
         M = GenGr->rotor_grid_par.Row;
         N = GenGr->rotor_grid_par.Col;
-        strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\Rotor\\";
     }
     else
     {
         M = GenGr->stator_grid_par.Row;
         N = GenGr->stator_grid_par.Col;
-        strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\Stator\\";
     }
+
+    //РАСЧЕТ HX
     for (i = 0; i < N; i+=2)
         for (j = 0; j < M; j+=2)
         {
@@ -50,6 +48,7 @@ void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, bool part, int im_out)
             g->hx   [j  + (i+1) * M] = Chxh * Hx - Chxe * (Ez_next_x - Ez);
         }
 
+    //РАСЧЕТ HY
     for (i = 0; i < N; i+=2)
     {
         for (j = 0; j < M; j+=2)
@@ -59,7 +58,7 @@ void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, bool part, int im_out)
                 Chye        = g->chye [j + i * M];
                 Ez          = g->ez   [j + i * M];
 
-                if (j == (M-2) && part)//Условие 3.1 Cвязь с сеткой статора через Ez
+                if (j == (M-2) && part)//Условие 3.1.1 Cвязь с сеткой статора через Ez. Подстановка Ez
                 {
                     Ez_next_y      = GenGr->join_Ez_grid_pos[i/2].val;
                 }
@@ -73,12 +72,12 @@ void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, bool part, int im_out)
     }
     iH++;
 
+    //Условие 3.2.2 Cвязь с сеткой ротора через Hy. Сохранение Hy для расчета сетки ротора
     int nj = 0;
     if (part)
         for (i = 0; i < N && nj < GenGr->stator_grid_par.Col / 2; i+=2)
         {
-            if (i == GenGr->join_Hy_grid_pos[nj].i1)//если это сетка статора, сохраняем для расчета сетки ротора
-                //Cвязь с сеткой статора через Ez
+            if (i == GenGr->join_Hy_grid_pos[nj].i1)
             {
                 while (i == GenGr->join_Hy_grid_pos[nj].i1)
                 {
@@ -92,41 +91,27 @@ void Fdtd_calc::updateH2d(grid_fdtd *g, GenGrid2D *GenGr, bool part, int im_out)
             }
         }
 
-    if (part && iH == im_out)
-    {
-        ArrOutText (strPath, "Hy_Rotor" + std::to_string(iH), N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->hy);
-        ArrOutText (strPath, "Hx_Rotor" + std::to_string(iH), N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->hx);
-    }
-    else if (!part && iH == im_out)
-    {
-        ArrOutText (strPath, "Hy_Stator" + std::to_string(iH), N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->hy);
-        ArrOutText (strPath, "Hx_Stator" + std::to_string(iH), N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->hx);
-    }
-
     return;
 }
 
 /* update electric field */
-void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, bool part, int im_out)  {
+void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, bool part)  {
 
     int i, j;
     int M, N;
 
     double Ez, Ceze, Cezhx, Cezhy;
     double Hy, Hy_pr, Hx, Hx_pr;
-    std::string strPath;
 
     if (part)
     {
         M = GenGr->rotor_grid_par.Row;
         N = GenGr->rotor_grid_par.Col;
-        strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\Rotor\\";
     }
     else
     {
         M = GenGr->stator_grid_par.Row;
         N = GenGr->stator_grid_par.Col;
-        strPath = "D:\\work\\Gen2D_FDTD\\TextFiles\\EH\\Stator\\";
     }
 
     for (i = 0; i < N; i+=2)
@@ -146,7 +131,7 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, bool part, int im_out)
                 {
                     Hy_pr   = 0;
                 }
-                else if (j == 0 && !part)//Условие 3.2 Cвязь с сеткой статора через Hy
+                else if (j == 0 && !part)//Условие 3.2.1 Cвязь с сеткой статора через Hy. Подстановка Hy
                 {
                     Hy_pr   = GenGr->join_Hy_grid_pos[i/2].val;
                 }
@@ -171,6 +156,8 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, bool part, int im_out)
 
         int check0 = 0;
     }
+
+    //Условие 3.1.2 Cвязь с сеткой статора через Ez. Сохранение Ez
     int nj = 0;
     if (!part)
         for (i = 0; i < N && nj < GenGr->rotor_grid_par.Col / 2; i+=2)
@@ -199,15 +186,6 @@ void Fdtd_calc::updateE2d(grid_fdtd *g, GenGrid2D *GenGr, bool part, int im_out)
             }
         }
     iE++;
-
-    if (part && iE == im_out)
-    {
-        ArrOutText (strPath, "Ez_Rotor" + std::to_string(iE), N, M, GenGr->rotor_grid_par.Np_s,  GenGr->rotor_grid_par.Np_p, g->ez);
-    }
-    else if (!part && iE == im_out)
-    {
-        ArrOutText (strPath, "Ez_Stator" + std::to_string(iE), N, M, GenGr->stator_grid_par.Np_s,  GenGr->stator_grid_par.Np_p, g->ez);
-    }
 return;
 }
 
