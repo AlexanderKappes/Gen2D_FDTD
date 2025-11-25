@@ -1,0 +1,110 @@
+*.user
+*.autosave
+*.swp
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.so.*
+*.dll
+*.dylib
+*.exe
+*.ipynb
+*.dat
+*.DAT
+*.cfg
+*.CFG
+
+# Файлы редакторов и IDE
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+.vs/
+out/
+*.code-workspace
+
+# Файлы резервных копий
+*.bak
+*.tmp
+*.old
+
+# Логи
+*.log
+
+# Конфигурационные файлы локальной среды
+*.user
+*.autosave
+
+# Кэш, временные файлы
+*.cache
+*.tmp
+*.lock
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Qt-es
+object_script.*.Release
+object_script.*.Debug
+*_plugin_import.cpp
+/.qmake.cache
+/.qmake.stash
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qmlc
+*.jsc
+Makefile*
+*build-*
+*.qm
+*.prl
+
+# Qt unit tests
+target_wrapper.*
+
+# QtCreator
+*.autosave
+
+# QtCreator Qml
+*.qmlproject.user
+*.qmlproject.user.*
+
+# QtCreator CMake
+CMakeLists.txt.user*
+
+# QtCreator 4.8< compilation database
+compile_commands.json
+
+# QtCreator local machine specific files for imported projects
+*creator.user*
+
+*_qmlcache.qrc
+
+# Doxygen
+**/html
+
+# Lib
+!**/lib/RZA_PS.dll
+*.pro.user*
+build-*
+.~lock*
+**/.qtc_clangd/*
+**/build/**
+**/bin/**
+
+# Игнорируем папку для сборки
+build/
+
+# Игнорируем папку внешних библиотек
+import/
+
